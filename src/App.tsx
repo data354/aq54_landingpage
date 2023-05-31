@@ -1,3 +1,4 @@
+import 'leaflet/dist/leaflet.css'
 import { Avatar, Button, Center, Flex, Grid, Group, Input, Paper, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import logo from "./assets/logo.jpeg"
 import fondPollution from "./assets/pollution.jpg"
@@ -5,25 +6,24 @@ import iconFace from "./assets/face.png"
 import iconInsta from "./assets/insta.webp"
 import iconYoutube from "./assets/youtube.webp"
 import iconTwitter from "./assets/twitter.png"
-import { IconPhoneCall, IconSend } from "@tabler/icons-react";
+import { IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
-import 'leaflet/dist/leaflet.css'
 
 const Header = () => {
-  return <div id="header" className="z-50 h-20 px-5 flex items-center sticky top-0 bg-white">
+  return <div id="header" className="z-50 h-20 px-5 flex items-center bg-gray-800 text-white">
     <Grid className="w-full" align="center">
       <Grid.Col span={3}>
         <Group>
-          <Avatar radius={"md"} src={logo} size={"lg"} alt="Data354 Logo" />
-          <Text fw={700} fz="lg">AQ54</Text>
+          <Avatar radius={"md"} src={logo} size={"md"} alt="Data354 Logo" />
+          <Text fw={1000} fz="xl">AQ54</Text>
         </Group>
       </Grid.Col>
       <Grid.Col span={9} >
         <Flex gap={50} align={"center"} justify={"end"}>
-          <Text fw={600} className="cursor-pointer hover:text-red-800">Qualité de l'air</Text>
-          <Text fw={600} className="cursor-pointer hover:text-red-800">Projet AQ54</Text>
-          <Text fw={600} className="cursor-pointer hover:text-red-800">Données</Text>
-          <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="bg-red-700 hover:bg-red-800">Contactez-nous</Button>
+          <Text fw={600} className="cursor-pointer hover:text-red-500">Qualité de l'air</Text>
+          <Text fw={600} className="cursor-pointer hover:text-red-500">Projet AQ54</Text>
+          <Text fw={600} className="cursor-pointer hover:text-red-500">Données</Text>
+          <Button leftIcon={<IconPhoneCall />} size="lg" radius={0} className="bg-red-700">Contactez-nous</Button>
         </Flex>
       </Grid.Col>
     </Grid>
@@ -44,7 +44,7 @@ const Banner = () => {
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
         </Text>
-        <Button radius={0} size="lg" className="bg-red-700" mt={50}>En savoir plus</Button>
+        <Button rightIcon={<IconPlus />} radius={0} size="lg" className="bg-red-700" mt={50}>En savoir plus</Button>
       </Grid.Col>
       <Grid.Col offset={2} span={3} >
         <Paper shadow="lg" p={0} opacity={0.85}>
@@ -61,16 +61,12 @@ const Banner = () => {
 const Map = () => {
 
 
-  let zoom: number = 18
-  let mapCenter: [number, number] = [0, 0]
+  let mapZoom: number = 11
+  let mapCenter: [number, number] = [5.32, -4]
 
   function MapComponent() {
 
-    // const map = useMap()
-
-    // map.setViewer(mapCenter)
-    // map.setZoom(zoom)
-
+  //  const map = useMap()
 
     return (
       <TileLayer
@@ -79,7 +75,7 @@ const Map = () => {
   }
 
 
-  return <MapContainer style={{ height: "50vh", padding: 0 }}>
+  return <MapContainer zoom={mapZoom} center={mapCenter} scrollWheelZoom={false} style={{ height: "50vh", padding: 0 }}>
     <MapComponent />
   </MapContainer>
 }
@@ -88,12 +84,6 @@ const Contacts = () => {
   return (
     <div className="p-10 bg-gray-900 bg-blend-multiply bg-opacity-80" style={{ backgroundImage: `url("${fondPollution}")` }}>
       <Grid justify="center" align="center">
-        {/* <Grid.Col span={2}>
-          <Group>
-            <Avatar radius={0} src={logo} size={"lg"} alt="Data354 Logo" />
-            <Text fw={1000} color="white" fz="xl">AQ54</Text>
-          </Group>
-        </Grid.Col> */}
         <Grid.Col span={3}>
           <Text c={"dark"} fz={35} opacity={0.9} className="font-extrabold text-gray-50">Devenez partenaire</Text>
           <Stack mt={20} spacing={15}>
@@ -133,9 +123,30 @@ const AppFooter = () => {
   );
 };
 
-const Indicator = () => {
-  return <div id="banner" className="h-36 bg-green-600">
+const Projects = () => {
+  return <div id="projects" className="p-32 bg-white">
+    <Text fw={1000} fz={80} color="dark" >Notre projet</Text>
+    <Grid justify="center">
+      <Grid.Col span={4}>
 
+      </Grid.Col>
+      <Grid.Col span={4}>
+        <Text fz={20} align="justify">
+          Pour faire face à la pollution de l’air et à ses dangers, data354 a mis au point le projet AQ54. 
+          L’objectif du projet : déployer un réseau de capteurs de qualité de l’air à travers toute la ville d’Abidjan, 
+          en nombre suffisant pour mettre au point une réelle cartographie de la pollution de l’air dans la ville. 
+          Notre plus-value : gérer efficacement la collecte des données qui proviendront des capteurs, les analyser, 
+          les afficher et les partager de manière ouverte et en temps réel, avec tous les acteurs concernés : 
+          les politiques et législateurs, entreprises, organisations non-gouvernementales, et bien sûr les citoyens. 
+          
+          De plus en plus d’autres villes africaines (Nairobi, Accra, Addis Abbaba… sources) se dotent de tels réseaux de capteurs. 
+          Le but de ce projet, c’est de doter Abidjan d’une infrastructure moderne pour piloter sa qualité d’air - comme la ville a 
+          pu s’y engager dans le cadre du C40 Cities (source).
+          Nous sommes convaincus que cela permettra d’accélérer non seulement la prise de conscience, mais aussi l’engagement citoyen,
+            privé et public, en termes d’actions, de mesures et de législations, dans la lutte contre la pollution de l’air.
+        </Text>
+      </Grid.Col>
+    </Grid>
   </div>
 }
 
@@ -144,6 +155,7 @@ const App = () => {
     <>
       <Header />
       <Banner />
+      <Projects />
       <Map />
       <Contacts />
       <AppFooter />
