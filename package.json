@@ -7,8 +7,10 @@
     "dev": "vite ",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "docker:build": "docker build -t europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp .",
-    "docker:push": "docker push europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp"
+    "docker:build": "DOCKER_BUILDKIT=1 docker build -t europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp .",
+    "docker:push": "docker push europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp",
+    "publish:cloud": "yarn build && yarn docker:build && yarn docker:push"
+  
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",

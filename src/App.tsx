@@ -1,28 +1,28 @@
 import 'leaflet/dist/leaflet.css'
-import { Avatar, Button, Center, Flex, Grid, Group, Input, Paper, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { Avatar, Button, Center, Flex, Grid, Group, HoverCard, Input, Paper, Stack, Text, TextInput, Textarea } from "@mantine/core";
 import logo from "./assets/logo.jpeg"
 import fondPollution from "./assets/pollution.jpg"
-import fondProjet from "./assets/projet.jpg"
-import fondLaunch from "./assets/launch.jpg"
-import fondSujet from "./assets/sujet.png"
+import logoAirqino from "./assets/airqino.png"
+import fondDechets from "./assets/dechets.jpeg"
+import fondAq54 from "./assets/aq54Page.png"
 import fondTraffic from "./assets/traffic.webp"
 import fondUsine from "./assets/industrie.jpg"
-import fondPoussiere from "./assets/poussiere.jpg"
+import logoMinedd from "./assets/minedd.jpg"
+import logoDiis from "./assets/diis.png"
+import fondPoisson from "./assets/poisson.webp"
 import iconFace from "./assets/face.png"
 import iconInsta from "./assets/insta.webp"
 import iconYoutube from "./assets/youtube.webp"
 import iconTwitter from "./assets/twitter.png"
-import { IconLocation, IconMapPin, IconMapPins, IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
+import { IconInfoCircle, IconLocation, IconMapPin, IconMapPins, IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
 import { MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
 import { icon } from 'leaflet';
 import sensors from './data/sensors';
 
 import fondSensor188_1 from "./assets/sensor188_1.jpeg"
-import fondSensor188_2 from "./assets/sensor188_2.jpeg"
 import fondSensor188_3 from "./assets/sensor188_3.jpeg"
 
 import fondSensor189_1 from "./assets/sensor189_1.jpeg"
-import fondSensor189_2 from "./assets/sensor189_2.jpeg"
 import fondSensor189_3 from "./assets/sensor189_3.jpeg"
 
 const Header = () => {
@@ -47,13 +47,13 @@ const Header = () => {
 }
 
 const Banner = () => {
-  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner" className="h-min bg-blend-multiply bg-black bg-opacity-20 p-36">
+  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner" className="h-min bg-cover bg-blend-multiply bg-black bg-opacity-20 p-36">
     <Grid justify="center">
-      <Grid.Col span={7}>
+      <Grid.Col span={8}>
         <Stack spacing={-2}>
-          <Text fw={1000} opacity={0.8} color="white" fz={80}>L'Open data</Text>
-          <Text fw={1000} opacity={0.8} color="white" fz={80}>contre la polution</Text>
-          <Text fw={1000} opacity={0.8} color="white" fz={80}>de l'air</Text>
+          <Text fw={1000} opacity={0.8} color="white" fz={70}>L'Open data</Text>
+          <Text fw={1000} opacity={0.8} color="white" fz={70}>contre la pollution</Text>
+          <Text fw={1000} opacity={0.8} color="white" fz={70}>de l'air</Text>
         </Stack>
         <Text opacity={0.9} fs={"oblique"} fw={1} color="white" fz={25} mt={15}>
           La pollution de l’air est un enjeu de premier rang pour la santé publique,
@@ -62,14 +62,14 @@ const Banner = () => {
         </Text>
         <Button rightIcon={<IconPlus />} radius={0} size="lg" className="bg-red-700" mt={50}>En savoir plus</Button>
       </Grid.Col>
-      <Grid.Col offset={2} span={3} >
-        <Paper shadow="xl" p={0} opacity={0.85} className='sticky top-2 backdrop-blur-lg bg-blue-950'>
+      <Grid.Col span={4} >
+        <Paper shadow="xl" p={0} opacity={0.85} className='sticky top-36 backdrop-blur-lg bg-blue-950'>
           <Stack p={15} align='center'>
             <Text fz={23} fw={800} color='white'>Qualité de l'air à Abidjan </Text>
           </Stack>
           <Stack className="bg-gray-500" p={20} >
             <Group align='center' spacing={20} position='apart'>
-              <Text fz={45} >🥵</Text>
+              <Text fz={45} >😟</Text>
               <Stack align='center' spacing={0}>
                 <Text color='white' fz={50} fw={1000}>15</Text>
                 <Text color='white' fz={15}>US AQI</Text>
@@ -79,6 +79,23 @@ const Banner = () => {
             {/* <Text fz={30} >🥵😊😟😷</Text> */}
           </Stack>
           <Stack className="bg-red-600 animate-pulse" p={10}></Stack>
+          <Stack className="bg-blue-950" p={10}>
+            <Group>
+              <HoverCard withArrow width={"target"} shadow="md">
+                <HoverCard.Target>
+                  <Text lineClamp={1} color='white'>Recommandations :  Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
+                    les enfants et les personnes ayant un statut socio-économique faible
+                    doivent réduire les efforts importants ou prolongés. </Text>
+                </HoverCard.Target>
+                <HoverCard.Dropdown>
+                  <Text>Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
+                    les enfants et les personnes ayant un statut socio-économique faible
+                    doivent réduire les efforts importants ou prolongés. </Text>
+                </HoverCard.Dropdown>
+              </HoverCard>
+
+            </Group>
+          </Stack>
         </Paper>
       </Grid.Col>
     </Grid>
@@ -90,37 +107,30 @@ const PollutioDescription = () => {
     <Text fw={1000} fz={80} color="dimmed" >Le sujet</Text>
     <Text fw={"lighter"} fz={40} color="dimmed" >La pollution de l'air en bref</Text>
     <Grid mt={50}>
-      <Grid.Col style={{ height: "60vh" }} span={4}>
-        <div style={{ backgroundImage: `url("${fondPoussiere}")` }}
-          className='w-full p-5 bg-cover h-full flex-col'>
-          <Text color='white' fw={800} fz={40} >Traffic</Text>
-          <Text color='white' fz={20} >Traffic</Text>
-        </div>
-      </Grid.Col>
-      <Grid.Col span={4} pr={25}>
-        <Grid className='h-full' gutter={0} align='stretch'>
+      <Grid.Col span={8} pr={25} style={{ height: "70vh" }}>
+        <Grid className='h-full' align='stretch'>
           <Grid.Col span={6}>
             <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white' >Traffic</Text>
+              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
+              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Traffic</Text>
             </div>
           </Grid.Col>
           <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondPoussiere}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white'>Bitume</Text>
+            <div style={{ backgroundImage: `url("${fondDechets}")` }}
+              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
+              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Incinération de déchets</Text>
             </div>
           </Grid.Col>
           <Grid.Col span={6}>
             <div style={{ backgroundImage: `url("${fondUsine}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white'>Industrie</Text>
+              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
+              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Industrie</Text>
             </div>
           </Grid.Col>
           <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondProjet}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white'>Menages & Commerces</Text>
+            <div style={{ backgroundImage: `url("${fondPoisson}")` }}
+              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
+              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Cuisson traditionnelle</Text>
             </div>
           </Grid.Col>
         </Grid>
@@ -128,10 +138,11 @@ const PollutioDescription = () => {
       <Grid.Col span={4}>
         <Text fz={22} align="justify" className='leading-loose'>
           La pollution de lair est un phénomène large qui désigne la présence en plus ou moins grande quantité, dans l’air respirable, de polluants atmosphériques.
-          Ces polluants sont des espèces chimiques gazeuses, ou liquides ou solides de petite taille, de natures et d’origines
-          variées, qui ont des effets différents sur la santé ou le climat. Parmi les polluants principaux, on retrouve :
-          le tarffic urbain, les industries et usines, les voies non bitumés, les commerces et ménages.
         </Text>
+        <Button rightIcon={<IconPlus />} radius={0} size="lg" className="bg-red-700" mt={50}>En savoir plus</Button>
+      </Grid.Col>
+      <Grid.Col span={8}>
+        <Text align='center' fs={"italic"}>Sources urbaines de pollution de l'air </Text>
       </Grid.Col>
     </Grid>
   </div>
@@ -142,37 +153,12 @@ const Projects = () => {
     <Text fw={1000} fz={80} align='end' color="dimmed" >Notre projet</Text>
     <Text fw={"lighter"} fz={40} align='end' color="dimmed" >Une ambition globale</Text>
     <Grid mt={50}>
-      <Grid.Col span={4}>
+      <Grid.Col span={8}>
         <Grid className='h-full' gutter={0} align='stretch'>
-          <Grid.Col span={12}>
-            <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white' >Traffic</Text>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondPoussiere}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white'>Bitume</Text>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondUsine}")` }}
-              className='w-full p-5 bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white'>Industrie</Text>
-            </div>
+          <Grid.Col span={12} pr={25}>
+            <img src={fondAq54} />
           </Grid.Col>
         </Grid>
-      </Grid.Col>
-      <Grid.Col px={50} span={4}>
-        <Text fz={22} align="justify" className='leading-loose'>
-          Pour faire face à la pollution de l’air et à ses dangers, data354 a mis au point le projet AQ54.
-          L’objectif du projet : déployer un réseau de capteurs de qualité de l’air à travers toute la ville d’Abidjan,
-          en nombre suffisant pour mettre au point une réelle cartographie de la pollution de l’air dans la ville.
-          Notre plus-value : gérer efficacement la collecte des données qui proviendront des capteurs, les analyser,
-          les afficher et les partager de manière ouverte et en temps réel, avec tous les acteurs concernés :
-          les politiques et législateurs, entreprises, organisations non-gouvernementales, et bien sûr les citoyens.
-        </Text>
       </Grid.Col>
       <Grid.Col span={4}>
         <Text fz={20} align="justify" className='leading-10'>
@@ -189,43 +175,38 @@ const Projects = () => {
     <Grid mt={50} style={{ height: "60vh" }}>
       <Grid.Col pr={25} span={4}>
         <Text fz={20} align="justify" className='leading-10'>
-          De plus en plus d’autres villes africaines (Nairobi, Accra, Addis Abbaba… sources) se dotent de tels réseaux de capteurs.
-          Le but de ce projet, c’est de doter Abidjan d’une infrastructure moderne pour piloter sa qualité d’air - comme la ville a
-          pu s’y engager dans le cadre du C40 Cities (source).
-          Nous sommes convaincus que cela permettra d’accélérer non seulement la prise de conscience, mais aussi l’engagement citoyen,
-          privé et public, en termes d’actions, de mesures et de législations, dans la lutte contre la pollution de l’air.
-
+          Un projet de grande envergure nécessite des fonds, surtout pour être pérenne et porter des bénéfices durables.
+          Pour prendre action rapidement, data354 a lancé sur fonds propres une phase pilote du projet.
+          Deux capteurs, prêtés par notre partenaire AirQino (lien vers leur page) ont été installé en ville, où ils collectent des données de qualité de l’air pendant trois mois au moins.
+          Il donnera également lieu à un rapport constitué des conclusions tirées de l’analyse des données sur la période de collecte.
         </Text>
       </Grid.Col>
       <Grid.Col span={4}>
-        <Grid className='h-full' gutter={0} align='stretch'>
+        <Grid className='h-full' align='stretch'>
           <Grid.Col span={12}>
             <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
               className='w-full bg-center bg-cover h-full flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-50 p-2' >Pharmacie du bonheur (SMART188)</Text>
+              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Pharmacie du bonheur (SMART188)</Text>
             </div>
           </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondSensor188_2}")`}} className='w-full bg-cover h-full'></div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondSensor188_1}")`}} className='w-full bg-cover h-full'></div>
+          {/* <Grid.Col span={6}>
+            <div style={{ backgroundImage: `url("${fondSensor188_2}")` }} className='w-full bg-cover h-full'></div>
+          </Grid.Col> */}
+          <Grid.Col span={12}>
+            <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='w-full bg-cover bg-center h-full'></div>
           </Grid.Col>
         </Grid>
       </Grid.Col>
-      <Grid.Col span={4}>
-        <Grid className='h-full' gutter={0} align='stretch'>
+      <Grid.Col span={4} style={{ height: "70vh" }}>
+        <Grid className='h-full' align='stretch'>
           <Grid.Col span={12}>
             <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
               className='w-full bg-cover h-full bg-center flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-50 p-2' >Pharmacie rue ministre (SMART189)</Text>
+              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Pharmacie rue ministre (SMART189)</Text>
             </div>
           </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondSensor189_2}")`}} className='w-full bg-cover h-full'></div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondSensor189_3}")`}} className='w-full bg-cover h-full'></div>
+          <Grid.Col span={12}>
+            <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='w-full bg-cover bg-center h-full'></div>
           </Grid.Col>
         </Grid>
       </Grid.Col>
@@ -273,7 +254,7 @@ const Map = () => {
 
 const Contacts = () => {
   return (
-    <div className="p-10 bg-gray-900 bg-blend-multiply bg-opacity-80" style={{ backgroundImage: `url("${fondPollution}")` }}>
+    <div className="p-10 bg-gray-950 bg-blend-multiply bg-opacity-90" style={{ backgroundImage: `url("${fondPollution}")` }}>
       <Grid justify="center" align="center">
         <Grid.Col span={3}>
           <Text c={"dark"} fz={35} opacity={0.9} className="font-extrabold text-gray-50">Devenez partenaire</Text>
@@ -305,6 +286,28 @@ const Contacts = () => {
   )
 }
 
+const Partenaires = () => {
+  return (
+    <div className="px-96 pb-16">
+      <Text fz={25} fw={800} align='center' color="dimmed" py={50}>Nos partenaires</Text>
+      <Group align='center' position='apart'>
+
+        <a href="https://environnement.gouv.ci/directions-centrales/ " target="_blank" rel="noopener noreferrer">
+          <img className='h-32' src={logoMinedd} alt="" />
+        </a>
+
+        <a href="https://www.airqino.it/en/" target="_blank" rel="noopener noreferrer">
+          <img className='h-32' src={logoAirqino} alt="" />
+        </a>
+
+        <a href="https://www.snisdiis.com/" target="_blank" rel="noopener noreferrer">
+          <img className='h-32' src={logoDiis} alt="" />
+        </a>
+      </Group>
+    </div>
+  )
+}
+
 const AppFooter = () => {
   return (
     <Stack p={5} align="center" className="bg-gray-700 p-5">
@@ -321,6 +324,7 @@ const App = () => {
       <Banner />
       <PollutioDescription />
       <Projects />
+      <Partenaires />
       <Map />
       <Contacts />
       <AppFooter />
