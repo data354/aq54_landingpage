@@ -35,9 +35,9 @@ const Header = () => {
       </Grid.Col>
       <Grid.Col span={9} >
         <Flex gap={50} align={"center"} justify={"end"} className='hidden lg:flex' >
-          <Text fw={600} className="cursor-pointer hover:text-red-500">Qualité de l'air</Text>
-          <Text fw={600} className="cursor-pointer hover:text-red-500">Projet AQ54</Text>
-          <Text fw={600} className="cursor-pointer hover:text-red-500">Visualisation des données</Text>
+          <a className="cursor-pointer hover:text-red-500">Qualité de l'air</a>
+          <a className="cursor-pointer hover:text-red-500">Projet AQ54</a>
+          <a href='https://aq54-app-m3okm5mmqa-ez.a.run.app' target='blank' className="cursor-pointer hover:text-red-500">Visualisation des données</a>
           <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="bg-red-700">Contactez-nous</Button>
         </Flex>
       </Grid.Col>
@@ -99,7 +99,7 @@ const PollutioDescription = () => {
         Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
         <a href='#' className='text-blue-500 hover:text-blue-600'>En savoir plus </a>
       </div>
-      <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-10">
+      <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-10 xl:p-24">
         <div style={{ backgroundImage: `url("${fondTraffic}")` }}
           className='h-44 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Traffic</p>
@@ -127,38 +127,38 @@ const Projects = () => {
     <p className='text-4xl lg:text-7xl sm:text-5xl font-bold text-blue-900'>Le projet AQ54</p>
     <p className='text-gray-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
     <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
-      <img className='xl:col-span-2' src={fondAq54} />
-      <div className='text-justify'>
+      <div className='text-justify xl:order-2'>
         <p className='text-lg text-blue-900 font-bold sm:text-3xl'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
         <ul className='list-decimal list-inside space-y-5 text-gray-500 sm:text-xl mt-10'>
-          <li>Doter Abidjan d’un réseau de capteurs suffisant pour obtenir une cartographie de la qualité de l’air en temps réel,</li>
-          <li>Collecter, traiter, analyser les données pour comprendre et agir contre la pollution aérienne,</li>
-          <li>Développer une plateforme de visualisation des données et les diffuser ouvertement aux décideurs, scientifiques, entreprises, organisations et aux citoyens.</li>
+          <li>Doter Abidjan d’un <b>réseau de capteurs</b> suffisant pour obtenir une <b>cartographie de la qualité de l’air</b> en temps réel,</li>
+          <li><b>Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne,</li>
+          <li>Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b> aux <b>décideurs, scientifiques, entreprises, organisations</b> et aux <b>citoyens</b>.</li>
         </ul>
       </div>
+      <img className='xl:col-span-2 xl:order-1 xl:p-24' src={fondAq54} />
     </div>
 
     <p className='my-20 text-center text-4xl opacity-40 text-gray- leading-10'><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</p>
 
     <div className='mt-10 grid gap-5 xl:grid-cols-3 lg:gap-10'>
       <div className='text-justify'>
-        <p className='text-lg text-blue-900 font-bold sm:text-3xl'>Pour initier le projet, Data354 a lancé sa phase pilote consistant en:</p>
+        <p className='text-lg text-blue-900 font-bold sm:text-3xl'>Pour initier le projet, Data354 a lancé sa <b>phase pilote</b> consistant en:</p>
         <ul className='list-decimal list-inside mt-10 space-y-5 text-gray-500 sm:text-xl'>
-          <li>L’installation de deux premiers capteurs en ville et une période de récolte de données,</li>
-          <li>Le développement et tests de la plateforme de visualisation,</li>
-          <li>L’étude sur l’impact du bitumage de route sur la qualité de l’air.</li>
+          <li><b>L’installation</b> de deux premiers capteurs en ville et une <b>période de récolte</b> de données,</li>
+          <li>Le développement et tests de la <b>plateforme de visualisation</b>,</li>
+          <li>L’étude sur <b>l’impact du bitumage</b> de route sur la qualité de l’air.</li>
         </ul>
       </div>
-      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-10'>
+      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-10 xl:p-24'>
         <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
           className='h-44 lg:h-80 w-full bg-center bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie du bonheur</p>
         </div>
-        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
         <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
           className='h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
           <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie rue ministre</p>
         </div>
+        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
         <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
       </div>
     </div>
@@ -274,7 +274,7 @@ const App = () => {
     <>
       <Header />
       <Banner />
-      <div className='p-10 py-20 md:px-20 lg:p-36 mx-auto space-y-24'>
+      <div className='p-10 py-20 md:px-20 lg:p-36 mx-auto'>
         <PollutioDescription />
         <Projects />
         <Partenaires />
