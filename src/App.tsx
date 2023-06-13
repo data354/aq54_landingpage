@@ -1,5 +1,5 @@
 import 'leaflet/dist/leaflet.css'
-import { Avatar, Button, Center, Flex, Grid, Group, HoverCard, Input, Paper, Stack, Text, TextInput, Textarea } from "@mantine/core";
+import { Avatar, Button, Flex, Grid, HoverCard, Stack, Text, } from "@mantine/core";
 import logo from "./assets/logo.jpeg"
 import fondPollution from "./assets/pollution.jpg"
 import logoAirqino from "./assets/airqino.png"
@@ -10,12 +10,9 @@ import fondUsine from "./assets/industrie.jpg"
 import logoMinedd from "./assets/minedd.jpg"
 import logoDiis from "./assets/diis.png"
 import fondPoisson from "./assets/poisson.webp"
-import iconFace from "./assets/face.png"
-import iconInsta from "./assets/insta.webp"
-import iconYoutube from "./assets/youtube.webp"
-import iconTwitter from "./assets/twitter.png"
-import { IconInfoCircle, IconLocation, IconMapPin, IconMapPins, IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
-import { MapContainer, Marker, TileLayer, Tooltip, useMap } from "react-leaflet";
+import iconLinkedin from "./assets/linkedin.png"
+import { IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
+import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
 import sensors from './data/sensors';
 
@@ -26,19 +23,19 @@ import fondSensor189_1 from "./assets/sensor189_1.jpeg"
 import fondSensor189_3 from "./assets/sensor189_3.jpeg"
 
 const Header = () => {
-  return <div id="header" className="z-50 h-20 px-5 flex items-center bg-gray-800 text-white sticky top-0">
+  return <div id="header" className="z-50 h-20 px-5 flex items-center bg-gray-800 text-white lg:sticky lg:top-0">
     <Grid className="w-full" align="center">
       <Grid.Col span={3}>
-        <Group>
+        <a href="https://data354.com" target="_blank" rel="noopener noreferrer">
           <Avatar radius={"md"} src={logo} size={"md"} alt="Data354 Logo" />
-          <Text fw={1000} fz="xl">AQ54</Text>
-        </Group>
+        </a>
+        <span>AQ54</span>
       </Grid.Col>
       <Grid.Col span={9} >
-        <Flex gap={50} align={"center"} justify={"end"}>
+        <Flex gap={50} align={"center"} justify={"end"} className='hidden' >
           <Text fw={600} className="cursor-pointer hover:text-red-500">Qualité de l'air</Text>
           <Text fw={600} className="cursor-pointer hover:text-red-500">Projet AQ54</Text>
-          <Text fw={600} className="cursor-pointer hover:text-red-500">Données</Text>
+          <Text fw={600} className="cursor-pointer hover:text-red-500">Visualisation des données</Text>
           <Button leftIcon={<IconPhoneCall />} size="lg" radius={0} className="bg-red-700">Contactez-nous</Button>
         </Flex>
       </Grid.Col>
@@ -47,178 +44,130 @@ const Header = () => {
 }
 
 const Banner = () => {
-  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner" className="h-min bg-cover bg-blend-multiply bg-black bg-opacity-20 p-36">
-    <Grid justify="center">
-      <Grid.Col span={8}>
-        <Stack spacing={-2}>
-          <Text fw={1000} opacity={0.8} color="white" fz={70}>L'Open data</Text>
-          <Text fw={1000} opacity={0.8} color="white" fz={70}>contre la pollution</Text>
-          <Text fw={1000} opacity={0.8} color="white" fz={70}>de l'air</Text>
-        </Stack>
-        <Text opacity={0.9} fs={"oblique"} fw={1} color="white" fz={25} mt={15}>
+  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner" className=" h-full bg-cover bg-blend-multiply bg-black bg-opacity-40 p-10 md:p-20">
+    <div className='text-white grid gap-5 md:grid-cols-3 md:gap-20 xl:grid-cols-4'>
+      <div className=' md:col-span-2'>
+        <p className='text-4xl font-bold md:text-6xl'>L'Open data contre la pollution de l'air</p>
+        <p className='text-xl mt-5 text-justify md:mt-10 font-extralight'>
           La pollution de l’air est un enjeu de premier rang pour la santé publique,
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
-        </Text>
-        <Button rightIcon={<IconPlus />} radius={0} size="lg" className="bg-red-700" mt={50}>En savoir plus</Button>
-      </Grid.Col>
-      <Grid.Col span={4} >
-        <Paper shadow="xl" p={0} opacity={0.85} className='sticky top-36 backdrop-blur-lg bg-blue-950'>
-          <Stack p={15} align='center'>
-            <Text fz={23} fw={800} color='white'>Qualité de l'air à Abidjan </Text>
-          </Stack>
-          <Stack className="bg-gray-500" p={20} >
-            <Group align='center' spacing={20} position='apart'>
-              <Text fz={45} >😟</Text>
-              <Stack align='center' spacing={0}>
-                <Text color='white' fz={50} fw={1000}>15</Text>
-                <Text color='white' fz={15}>US AQI</Text>
-              </Stack>
-              <Text color='white' fz={20}>Moderate</Text>
-            </Group>
+        </p>
+        <Button rightIcon={<IconPlus />} radius={0} size="md" className="bg-red-700" mt={30}>En savoir plus</Button>
+      </div>
+      <div className='xl:col-start-4'>
+        <div className='sticky top-36 backdrop-blur-lg bg-white opacity-90'>
+          <p className='text-gray-950 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
+          <div className="text-gray-500 p-5 grid grid-cols-3 sm:grid-cols-2">
+            <span className='text-5xl text-center self-center'>😟</span>
+            <div className='text-center'>
+              <p className='text-6xl font-bold'>15</p>
+              <p className='text-xs'>US AQI</p>
+              <p className='text-md text-orange-500 self-center text-center hidden sm:block'>moderate</p>
+            </div>
+            <p className='text-md text-orange-500 self-center text-center sm:hidden'>moderate</p>
             {/* <Text fz={30} >🥵😊😟😷</Text> */}
+          </div>
+          <p className="bg-red-600 animate-pulse p-1"></p>
+          <Stack className="bg-gray-800" p={10}>
+            <HoverCard withArrow width={"target"} shadow="md">
+              <HoverCard.Target>
+                <small className='line-clamp-1'>Recommandations :  Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
+                  les enfants et les personnes ayant un statut socio-économique faible
+                  doivent réduire les efforts importants ou prolongés. </small>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <small className='text-gray-700'>Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
+                  les enfants et les personnes ayant un statut socio-économique faible
+                  doivent réduire les efforts importants ou prolongés. </small>
+              </HoverCard.Dropdown>
+            </HoverCard>
           </Stack>
-          <Stack className="bg-red-600 animate-pulse" p={10}></Stack>
-          <Stack className="bg-blue-950" p={10}>
-            <Group>
-              <HoverCard withArrow width={"target"} shadow="md">
-                <HoverCard.Target>
-                  <Text lineClamp={1} color='white'>Recommandations :  Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
-                    les enfants et les personnes ayant un statut socio-économique faible
-                    doivent réduire les efforts importants ou prolongés. </Text>
-                </HoverCard.Target>
-                <HoverCard.Dropdown>
-                  <Text>Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
-                    les enfants et les personnes ayant un statut socio-économique faible
-                    doivent réduire les efforts importants ou prolongés. </Text>
-                </HoverCard.Dropdown>
-              </HoverCard>
-
-            </Group>
-          </Stack>
-        </Paper>
-      </Grid.Col>
-    </Grid>
+        </div>
+      </div>
+    </div>
   </div>
 }
 
 const PollutioDescription = () => {
-  return <div id="pollutionDescription" className="px-40 mt-32 bg-white">
-    <Text fw={1000} fz={80} color="dimmed" >Le sujet</Text>
-    <Text fw={"lighter"} fz={40} color="dimmed" >La pollution de l'air en bref</Text>
-    <Grid mt={50}>
-      <Grid.Col span={8} pr={25} style={{ height: "70vh" }}>
-        <Grid className='h-full' align='stretch'>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Traffic</Text>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondDechets}")` }}
-              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Incinération de déchets</Text>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondUsine}")` }}
-              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Industrie</Text>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondPoisson}")` }}
-              className='w-full bg-blend-multiply bg-cover h-full flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Cuisson traditionnelle</Text>
-            </div>
-          </Grid.Col>
-        </Grid>
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Text fz={22} align="justify" className='leading-loose'>
-          La pollution de lair est un phénomène large qui désigne la présence en plus ou moins grande quantité, dans l’air respirable, de polluants atmosphériques.
-        </Text>
-        <Button rightIcon={<IconPlus />} radius={0} size="lg" className="bg-red-700" mt={50}>En savoir plus</Button>
-      </Grid.Col>
-      <Grid.Col span={8}>
-        <Text align='center' fs={"italic"}>Sources urbaines de pollution de l'air </Text>
-      </Grid.Col>
-    </Grid>
+  return <div id="pollutionDescription">
+    <p className='text-4xl lg:text-5xl font-bold text-blue-900'>La qualité de l'air</p>
+    <p className='text-gray-500 lg:text-lg'>Un enjeu majeur</p>
+    <div className="mt-5 grid lg:grid-cols-3 gap-5 lg:gap-10">
+      <div className="text-justify text-gray-500 leading-8">
+        Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
+        <a href='#' className='text-blue-500 hover:text-blue-600'>En savoir plus </a>
+      </div>
+      <div className="grid col-span-2 grid-cols-2 lg:gap-5">
+        <div style={{ backgroundImage: `url("${fondTraffic}")` }}
+          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Traffic</p>
+        </div>
+        <div style={{ backgroundImage: `url("${fondDechets}")` }}
+          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Incinération de déchets</p>
+        </div>
+        <div style={{ backgroundImage: `url("${fondUsine}")` }}
+          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Industrie</p>
+        </div>
+        <div style={{ backgroundImage: `url("${fondPoisson}")` }}
+          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Cuisson traditionnelle</p>
+        </div>
+        <p className='text-center text-sm mt-2 col-span-full'>Sources urbaines de pollution de l'air </p>
+      </div>
+    </div>
   </div>
 }
 
 const Projects = () => {
-  return <div id="projects" className="p-40 bg-white">
-    <Text fw={1000} fz={80} align='end' color="dimmed" >Notre projet</Text>
-    <Text fw={"lighter"} fz={40} align='end' color="dimmed" >Une ambition globale</Text>
-    <Grid mt={50}>
-      <Grid.Col span={8}>
-        <Grid className='h-full' gutter={0} align='stretch'>
-          <Grid.Col span={12} pr={25}>
-            <img src={fondAq54} />
-          </Grid.Col>
-        </Grid>
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Text fz={20} align="justify" className='leading-10'>
-          De plus en plus d’autres villes africaines (Nairobi, Accra, Addis Abbaba… sources) se dotent de tels réseaux de capteurs.
-          Le but de ce projet, c’est de doter Abidjan d’une infrastructure moderne pour piloter sa qualité d’air - comme la ville a
-          pu s’y engager dans le cadre du C40 Cities (source).
-          Nous sommes convaincus que cela permettra d’accélérer non seulement la prise de conscience, mais aussi l’engagement citoyen,
-          privé et public, en termes d’actions, de mesures et de législations, dans la lutte contre la pollution de l’air.
+  return <div id="projects">
+    <p className='text-4xl lg:text-5xl font-bold text-blue-900'>Le projet AQ54</p>
+    <p className='text-gray-500 lg:text-lg'>Une ambition globale</p>
+    <div className="mt-5 grid lg:grid-cols-3 gap-5 lg:gap-10">
+      <img className='lg:col-span-2' src={fondAq54} />
+      <div className='text-justify'>
+        <p className='text-lg text-blue-900 font-bold'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
+        <ul className='list-decimal list-inside mt-5 space-y-5 text-gray-500'>
+          <li>Doter Abidjan d’un réseau de capteurs suffisant pour obtenir une cartographie de la qualité de l’air en temps réel,</li>
+          <li>Collecter, traiter, analyser les données pour comprendre et agir contre la pollution aérienne,</li>
+          <li>Développer une plateforme de visualisation des données et les diffuser ouvertement aux décideurs, scientifiques, entreprises, organisations et aux citoyens.</li>
+        </ul>
+      </div>
+    </div>
 
-        </Text>
-      </Grid.Col>
-    </Grid>
-    <Text fw={"lighter"} mt={50} fz={40} color="dimmed" ><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</Text>
-    <Grid mt={50} style={{ height: "60vh" }}>
-      <Grid.Col pr={25} span={4}>
-        <Text fz={20} align="justify" className='leading-10'>
-          Un projet de grande envergure nécessite des fonds, surtout pour être pérenne et porter des bénéfices durables.
-          Pour prendre action rapidement, data354 a lancé sur fonds propres une phase pilote du projet.
-          Deux capteurs, prêtés par notre partenaire AirQino (lien vers leur page) ont été installé en ville, où ils collectent des données de qualité de l’air pendant trois mois au moins.
-          Il donnera également lieu à un rapport constitué des conclusions tirées de l’analyse des données sur la période de collecte.
-        </Text>
-      </Grid.Col>
-      <Grid.Col span={4}>
-        <Grid className='h-full' align='stretch'>
-          <Grid.Col span={12}>
-            <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
-              className='w-full bg-center bg-cover h-full flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Pharmacie du bonheur (SMART188)</Text>
-            </div>
-          </Grid.Col>
-          {/* <Grid.Col span={6}>
-            <div style={{ backgroundImage: `url("${fondSensor188_2}")` }} className='w-full bg-cover h-full'></div>
-          </Grid.Col> */}
-          <Grid.Col span={12}>
-            <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='w-full bg-cover bg-center h-full'></div>
-          </Grid.Col>
-        </Grid>
-      </Grid.Col>
-      <Grid.Col span={4} style={{ height: "70vh" }}>
-        <Grid className='h-full' align='stretch'>
-          <Grid.Col span={12}>
-            <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
-              className='w-full bg-cover h-full bg-center flex justify-end items-end'>
-              <Text color='white' className='bg-blue-950 bg-opacity-70 p-2' >Pharmacie rue ministre (SMART189)</Text>
-            </div>
-          </Grid.Col>
-          <Grid.Col span={12}>
-            <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='w-full bg-cover bg-center h-full'></div>
-          </Grid.Col>
-        </Grid>
-      </Grid.Col>
-    </Grid>
+    <p className='my-20 text-center text-4xl opacity-10 leading-10'><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</p>
 
+    <div className='mt-10 grid gap-5 lg:grid-cols-3 lg:gap-10'>
+      <div className='text-justify'>
+        <p className='text-lg text-blue-900 font-bold'>Pour initier le projet, Data354 a lancé sa phase pilote consistant en:</p>
+        <ul className='list-decimal list-inside mt-5 space-y-5 text-gray-500'>
+          <li>L’installation de deux premiers capteurs en ville et une période de récolte de données,</li>
+          <li>Le développement et tests de la plateforme de visualisation,</li>
+          <li>L’étude sur l’impact du bitumage de route sur la qualité de l’air.</li>
+        </ul>
+      </div>
+      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-5'>
+        <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
+          className='h-44 lg:h-56 w-full bg-center bg-cover flex justify-end items-end'>
+          <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie du bonheur</p>
+        </div>
+        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='h-44 lg:h-56 w-full bg-cover bg-center'></div>
+        <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
+          className='h-44 lg:h-56 w-full bg-cover bg-center flex justify-end items-end'>
+          <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie rue ministre</p>
+        </div>
+        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='h-44 lg:h-56 w-full bg-cover bg-center'></div>
+      </div>
+    </div>
   </div>
 }
 
 const Map = () => {
 
   let mapZoom: number = 11
-  let mapCenter: [number, number] = [5.32, -4]
+  let mapCenter: [number, number] = [5.37, -4]
 
   function MapComponent() {
 
@@ -247,73 +196,75 @@ const Map = () => {
     )
   }
 
-  return <MapContainer zoom={mapZoom} center={mapCenter} scrollWheelZoom={false} style={{ height: "70vh", padding: 0 }}>
+  return <MapContainer className='h-96 p-0' zoom={mapZoom} center={mapCenter} scrollWheelZoom={false}>
     <MapComponent />
   </MapContainer>
 }
 
-const Contacts = () => {
+const Partenaires = () => {
   return (
-    <div className="p-10 bg-gray-950 bg-blend-multiply bg-opacity-90" style={{ backgroundImage: `url("${fondPollution}")` }}>
-      <Grid justify="center" align="center">
-        <Grid.Col span={3}>
-          <Text c={"dark"} fz={35} opacity={0.9} className="font-extrabold text-gray-50">Devenez partenaire</Text>
-          <Stack mt={20} spacing={15}>
-            <label htmlFor="nom" className="text-white">Nom et prenoms</label>
-            <input id="nom" className="bg-gray-500 p-3 text-lg outline-0 text-white" />
-            <label htmlFor="entreprise" className="text-white">Entreprise</label>
-            <input id="entreprise" className="bg-gray-500 p-3 text-lg outline-0 text-white" />
-            {/* <label htmlFor="message" className="text-white">Message</label>
-            <textarea id="message" className="bg-gray-500 p-3 text-lg outline-0 text-white" /> */}
-          </Stack>
-          <Button fullWidth rightIcon={<IconSend />} radius={0} size="lg" className="bg-red-700" mt={50}>Soumettre</Button>
-        </Grid.Col>
-        <Grid.Col offset={1} span={3} >
-          <Stack spacing={30}>
-            <Text fz={"lg"} c={"white"}><b>Telephone</b> : +33 6 76 38 64 12</Text>
-            <Text fz={"lg"} c={"white"}><b>Mail</b> : lucas.thommen@data354.co</Text>
-            <Text fz={"lg"} c={"white"}><b>Adresse</b> : Cocody, Riviera Boulevard Y4</Text>
-            <Group spacing={50}>
-              <Avatar alt="logo facebook" src={iconFace} />
-              <Avatar alt="logo twitter" src={iconTwitter} />
-              <Avatar alt="logo instagram" src={iconInsta} />
-              <Avatar alt="logo youtube" src={iconYoutube} />
-            </Group>
-          </Stack>
-        </Grid.Col>
-      </Grid>
+    <div id='partners'>
+      <p className='text-3xl opacity-40 font-extralight text-center'>Nos partenaires</p>
+      <div className='grid grid-cols-3 mt-10 gap-20 md:grid-cols-5 place-content-center'>
+        <a className='md:col-start-2 self-center' href="https://environnement.gouv.ci/directions-centrales/ " target="_blank" rel="noopener noreferrer">
+          <img src={logoMinedd} alt="" />
+        </a>
+        <a className='self-center' href="https://www.airqino.it/en/" target="_blank" rel="noopener noreferrer">
+          <img src={logoAirqino} alt="" />
+        </a>
+        <a className='self-center' href="https://www.snisdiis.com/" target="_blank" rel="noopener noreferrer">
+          <img src={logoDiis} alt="" />
+        </a>
+      </div>
     </div>
   )
 }
 
-const Partenaires = () => {
+const Contacts = () => {
   return (
-    <div className="px-96 pb-16">
-      <Text fz={25} fw={800} align='center' color="dimmed" py={50}>Nos partenaires</Text>
-      <Group align='center' position='apart'>
-
-        <a href="https://environnement.gouv.ci/directions-centrales/ " target="_blank" rel="noopener noreferrer">
-          <img className='h-32' src={logoMinedd} alt="" />
-        </a>
-
-        <a href="https://www.airqino.it/en/" target="_blank" rel="noopener noreferrer">
-          <img className='h-32' src={logoAirqino} alt="" />
-        </a>
-
-        <a href="https://www.snisdiis.com/" target="_blank" rel="noopener noreferrer">
-          <img className='h-32' src={logoDiis} alt="" />
-        </a>
-      </Group>
+    <div className="bg-gray-950 p-10 md:px-20">
+      <p className="font-extrabold text-4xl text-gray-50">Contactez-nous</p>
+      <div className='grid grid-flow-row md:grid-cols-2'>
+        <div className='order-2'>
+          <Stack mt={20} spacing={15}>
+            <Grid>
+              <Grid.Col span={6}>
+                <label htmlFor="nom" className="text-white">Nom et prenoms</label>
+                <input id="nom" className="bg-gray-500 p-3 text-lg outline-0 text-white w-full mt-4" />
+              </Grid.Col>
+              <Grid.Col span={6}>
+                <label htmlFor="email" className="text-white">Email</label>
+                <input id="email" className="bg-gray-500 p-3 text-lg outline-0 text-white w-full mt-4" />
+              </Grid.Col>
+            </Grid>
+            <label htmlFor="entreprise" className="text-white">Organisation</label>
+            <input id="entreprise" className="bg-gray-500 p-3 text-lg outline-0 text-white w-full" />
+            <label htmlFor="message" className="text-white">Message</label>
+            <textarea id="message" className="bg-gray-500 p-3 text-lg outline-0 text-white" />
+          </Stack>
+          <Button fullWidth rightIcon={<IconSend />} radius={0} size="lg" className="bg-red-700" mt={50}>Soumettre</Button>
+        </div>
+        <div className='text-white space-y-5 mt-10 order-1'>
+          <p><b>Whatsapp</b> : +33 6 76 38 64 12</p>
+          <p><b>Telephone</b> : +225 07 1008 1410</p>
+          <p><b>Mail</b> : luca.thommen@data354.co</p>
+          <p><b>Adresse</b> : Cocody, Riviera Boulevard Y4</p>
+          <p>
+            <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
+              <Avatar alt="logo facebook" src={iconLinkedin} />
+            </a>
+          </p>
+        </div>
+      </div>
     </div>
   )
 }
 
 const AppFooter = () => {
   return (
-    <Stack p={5} align="center" className="bg-gray-700 p-5">
-      <Text size="sm" c="white"> {`Designed & built by Data354, 2023 CIV 🇨🇮`} - {`All rights reserved`}
-      </Text>
-    </Stack>
+    <div className="bg-gray-700 p-5">
+      <p className='text-white text-center text-sm'> {`Designed & built by Data354, 2023 CIV 🇨🇮`} - {`All rights reserved`}</p>
+    </div>
   );
 };
 
@@ -322,14 +273,15 @@ const App = () => {
     <>
       <Header />
       <Banner />
-      <PollutioDescription />
-      <Projects />
-      <Partenaires />
+      <div className='p-10 py-20 md:px-20 mx-auto space-y-10'>
+        <PollutioDescription />
+        <Projects />
+        <Partenaires />
+      </div>
       <Map />
       <Contacts />
       <AppFooter />
     </>
-
   );
 }
 
