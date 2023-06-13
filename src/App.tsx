@@ -26,10 +26,12 @@ const Header = () => {
   return <div id="header" className="z-50 h-20 px-5 flex items-center bg-gray-800 text-white lg:sticky lg:top-0">
     <Grid className="w-full" align="center">
       <Grid.Col span={3}>
-        <a href="https://data354.com" target="_blank" rel="noopener noreferrer">
-          <Avatar radius={"md"} src={logo} size={"md"} alt="Data354 Logo" />
-        </a>
-        <span>AQ54</span>
+        <Flex align={"center"}>
+          <a href="https://data354.com" target="_blank" rel="noopener noreferrer">
+            <Avatar radius={"md"} src={logo} size={"md"} alt="Data354 Logo" />
+          </a>
+          <span className='ml-5 font-extrabold'>AQ54</span>
+        </Flex>
       </Grid.Col>
       <Grid.Col span={9} >
         <Flex gap={50} align={"center"} justify={"end"} className='hidden lg:flex' >
@@ -44,28 +46,27 @@ const Header = () => {
 }
 
 const Banner = () => {
-  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner" className=" h-full bg-cover bg-blend-multiply bg-black bg-opacity-40 p-10 md:p-20">
-    <div className='text-white grid gap-5 md:grid-cols-3 md:gap-20 xl:grid-cols-4'>
-      <div className=' md:col-span-2'>
-        <p className='text-4xl font-bold md:text-6xl'>L'Open data contre la pollution de l'air</p>
-        <p className='text-xl mt-5 text-justify md:mt-10 font-extralight'>
+  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner" className=" h-full bg-cover bg-blend-multiply bg-black bg-opacity-40 p-10 md:p-20 lg:p-36">
+    <div className='text-white grid gap-5 lg:gap-20 xl:grid-cols-3'>
+      <div className='xl:col-span-2'>
+        <p className='text-4xl font-bold md:text-6xl lg:text-7xl'>L'Open data contre la pollution de l'air</p>
+        <p className='text-xl lg:text-3xl mt-5 text-justify md:mt-10 font-extralight'>
           La pollution de l’air est un enjeu de premier rang pour la santé publique,
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
         </p>
         <Button rightIcon={<IconPlus />} radius={0} size="md" className="bg-red-700" mt={30}>En savoir plus</Button>
       </div>
-      <div className='xl:col-start-4'>
+      <div className=''>
         <div className='sticky top-36 backdrop-blur-lg bg-white opacity-90'>
           <p className='text-gray-950 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
-          <div className="text-gray-500 p-5 grid grid-cols-3 md:grid-cols-2">
+          <div className="text-gray-500 p-5 grid grid-cols-3">
             <span className='text-5xl text-center self-center'>😟</span>
             <div className='text-center'>
               <p className='text-6xl font-bold'>15</p>
               <p className='text-xs'>US AQI</p>
-              <p className='text-md text-orange-500 self-center text-center hidden md:block'>moderate</p>
             </div>
-            <p className='text-md text-orange-500 self-center text-center md:hidden'>moderate</p>
+            <p className='text-md text-orange-500 self-center text-center'>moderate</p>
             {/* <Text fz={30} >🥵😊😟😷</Text> */}
           </div>
           <p className="bg-red-600 animate-pulse p-1"></p>
@@ -91,28 +92,28 @@ const Banner = () => {
 
 const PollutioDescription = () => {
   return <div id="pollutionDescription">
-    <p className='text-4xl lg:text-5xl font-bold text-blue-900'>La qualité de l'air</p>
-    <p className='text-gray-500 lg:text-lg'>Un enjeu majeur</p>
-    <div className="mt-5 grid lg:grid-cols-3 gap-5 lg:gap-10">
-      <div className="text-justify text-gray-500 leading-8">
+    <p className='text-4xl lg:text-7xl sm:text-5xl font-bold text-blue-900'>La qualité de l'air</p>
+    <p className='text-gray-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
+    <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
+      <div className="text-justify text-gray-500 leading-10 sm:text-xl lg:leading-10">
         Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
         <a href='#' className='text-blue-500 hover:text-blue-600'>En savoir plus </a>
       </div>
-      <div className="grid col-span-2 grid-cols-2 lg:gap-5">
+      <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-10">
         <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          className='h-44 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Traffic</p>
         </div>
         <div style={{ backgroundImage: `url("${fondDechets}")` }}
-          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          className='h-44 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Incinération de déchets</p>
         </div>
         <div style={{ backgroundImage: `url("${fondUsine}")` }}
-          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          className='h-44 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
           <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Industrie</p>
         </div>
         <div style={{ backgroundImage: `url("${fondPoisson}")` }}
-          className='h-44 lg:h-56 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
+          className='h-44 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-end items-end'>
           <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Cuisson traditionnelle</p>
         </div>
         <p className='text-center text-sm mt-2 col-span-full'>Sources urbaines de pollution de l'air </p>
@@ -123,13 +124,13 @@ const PollutioDescription = () => {
 
 const Projects = () => {
   return <div id="projects">
-    <p className='text-4xl lg:text-5xl font-bold text-blue-900'>Le projet AQ54</p>
-    <p className='text-gray-500 lg:text-lg'>Une ambition globale</p>
-    <div className="mt-5 grid lg:grid-cols-3 gap-5 lg:gap-10">
-      <img className='lg:col-span-2' src={fondAq54} />
+    <p className='text-4xl lg:text-7xl sm:text-5xl font-bold text-blue-900'>Le projet AQ54</p>
+    <p className='text-gray-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
+    <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
+      <img className='xl:col-span-2' src={fondAq54} />
       <div className='text-justify'>
-        <p className='text-lg text-blue-900 font-bold'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
-        <ul className='list-decimal list-inside mt-5 space-y-5 text-gray-500'>
+        <p className='text-lg text-blue-900 font-bold sm:text-3xl'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
+        <ul className='list-decimal list-inside space-y-5 text-gray-500 sm:text-xl mt-10'>
           <li>Doter Abidjan d’un réseau de capteurs suffisant pour obtenir une cartographie de la qualité de l’air en temps réel,</li>
           <li>Collecter, traiter, analyser les données pour comprendre et agir contre la pollution aérienne,</li>
           <li>Développer une plateforme de visualisation des données et les diffuser ouvertement aux décideurs, scientifiques, entreprises, organisations et aux citoyens.</li>
@@ -137,28 +138,28 @@ const Projects = () => {
       </div>
     </div>
 
-    <p className='my-20 text-center text-4xl opacity-10 leading-10'><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</p>
+    <p className='my-20 text-center text-4xl opacity-40 text-gray- leading-10'><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</p>
 
-    <div className='mt-10 grid gap-5 lg:grid-cols-3 lg:gap-10'>
+    <div className='mt-10 grid gap-5 xl:grid-cols-3 lg:gap-10'>
       <div className='text-justify'>
-        <p className='text-lg text-blue-900 font-bold'>Pour initier le projet, Data354 a lancé sa phase pilote consistant en:</p>
-        <ul className='list-decimal list-inside mt-5 space-y-5 text-gray-500'>
+        <p className='text-lg text-blue-900 font-bold sm:text-3xl'>Pour initier le projet, Data354 a lancé sa phase pilote consistant en:</p>
+        <ul className='list-decimal list-inside mt-10 space-y-5 text-gray-500 sm:text-xl'>
           <li>L’installation de deux premiers capteurs en ville et une période de récolte de données,</li>
           <li>Le développement et tests de la plateforme de visualisation,</li>
           <li>L’étude sur l’impact du bitumage de route sur la qualité de l’air.</li>
         </ul>
       </div>
-      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-5'>
+      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-10'>
         <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
-          className='h-44 lg:h-56 w-full bg-center bg-cover flex justify-end items-end'>
+          className='h-44 lg:h-80 w-full bg-center bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie du bonheur</p>
         </div>
-        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='h-44 lg:h-56 w-full bg-cover bg-center'></div>
+        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
         <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
-          className='h-44 lg:h-56 w-full bg-cover bg-center flex justify-end items-end'>
+          className='h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
           <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie rue ministre</p>
         </div>
-        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='h-44 lg:h-56 w-full bg-cover bg-center'></div>
+        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
       </div>
     </div>
   </div>
@@ -222,7 +223,7 @@ const Partenaires = () => {
 
 const Contacts = () => {
   return (
-    <div className="bg-gray-950 p-10 md:px-20">
+    <div className="bg-gray-950 p-10 md:px-20 lg:p-32">
       <p className="font-extrabold text-4xl text-gray-50">Contactez-nous</p>
       <div className='grid grid-flow-row md:grid-cols-2'>
         <div className='order-2'>
@@ -273,7 +274,7 @@ const App = () => {
     <>
       <Header />
       <Banner />
-      <div className='p-10 py-20 md:px-20 mx-auto space-y-24'>
+      <div className='p-10 py-20 md:px-20 lg:p-36 mx-auto space-y-24'>
         <PollutioDescription />
         <Projects />
         <Partenaires />
