@@ -32,11 +32,11 @@ const Header = () => {
         <span>AQ54</span>
       </Grid.Col>
       <Grid.Col span={9} >
-        <Flex gap={50} align={"center"} justify={"end"} className='hidden' >
+        <Flex gap={50} align={"center"} justify={"end"} className='hidden lg:flex' >
           <Text fw={600} className="cursor-pointer hover:text-red-500">Qualité de l'air</Text>
           <Text fw={600} className="cursor-pointer hover:text-red-500">Projet AQ54</Text>
           <Text fw={600} className="cursor-pointer hover:text-red-500">Visualisation des données</Text>
-          <Button leftIcon={<IconPhoneCall />} size="lg" radius={0} className="bg-red-700">Contactez-nous</Button>
+          <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="bg-red-700">Contactez-nous</Button>
         </Flex>
       </Grid.Col>
     </Grid>
@@ -58,14 +58,14 @@ const Banner = () => {
       <div className='xl:col-start-4'>
         <div className='sticky top-36 backdrop-blur-lg bg-white opacity-90'>
           <p className='text-gray-950 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
-          <div className="text-gray-500 p-5 grid grid-cols-3 sm:grid-cols-2">
+          <div className="text-gray-500 p-5 grid grid-cols-3 md:grid-cols-2">
             <span className='text-5xl text-center self-center'>😟</span>
             <div className='text-center'>
               <p className='text-6xl font-bold'>15</p>
               <p className='text-xs'>US AQI</p>
-              <p className='text-md text-orange-500 self-center text-center hidden sm:block'>moderate</p>
+              <p className='text-md text-orange-500 self-center text-center hidden md:block'>moderate</p>
             </div>
-            <p className='text-md text-orange-500 self-center text-center sm:hidden'>moderate</p>
+            <p className='text-md text-orange-500 self-center text-center md:hidden'>moderate</p>
             {/* <Text fz={30} >🥵😊😟😷</Text> */}
           </div>
           <p className="bg-red-600 animate-pulse p-1"></p>
@@ -273,7 +273,7 @@ const App = () => {
     <>
       <Header />
       <Banner />
-      <div className='p-10 py-20 md:px-20 mx-auto space-y-10'>
+      <div className='p-10 py-20 md:px-20 mx-auto space-y-24'>
         <PollutioDescription />
         <Projects />
         <Partenaires />
