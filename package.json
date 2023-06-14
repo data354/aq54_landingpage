@@ -10,19 +10,17 @@
     "docker:build": "DOCKER_BUILDKIT=1 docker build -t europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp .",
     "docker:push": "docker push europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp",
     "publish:cloud": "yarn build && yarn docker:build && yarn docker:push"
-  
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
-    "@mantine/carousel": "^6.0.13",
     "@mantine/core": "^6.0.11",
     "@mantine/hooks": "^6.0.11",
     "@tabler/icons-react": "^2.18.0",
-    "embla-carousel-react": "^8.0.0-rc06",
     "leaflet": "^1.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-leaflet": "^4.2.1"
+    "react-leaflet": "^4.2.1",
+    "react-router-dom": "^6.12.1"
   },
   "devDependencies": {
     "@types/leaflet": "^1.9.3",
