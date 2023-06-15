@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css'
 import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Stack, Text, } from "@mantine/core";
-import logo from "./assets/logo.jpeg"
+import logo from "./assets/logo.png"
 import fondPollution from "./assets/pollution.jpg"
 import logoAirqino from "./assets/airqino.png"
 import fondDechets from "./assets/dechets.jpeg"
