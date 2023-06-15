@@ -21,13 +21,18 @@ import fondSensor188_3 from "./assets/sensor188_3.jpeg"
 
 import fondSensor189_1 from "./assets/sensor189_1.jpeg"
 import fondSensor189_3 from "./assets/sensor189_3.jpeg"
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
-const Header = () => {
+export const Header = () => {
+
+  const navigate = useNavigate()
+  const location = useLocation()
+
   return <div id="header" className="z-50 h-20 px-5 flex items-center bg-gray-800 text-white lg:sticky lg:top-0">
     <Grid className="w-full" align="center">
       <Grid.Col span={3}>
         <Flex align={"center"}>
-          <a href="https://data354.com" target="_blank" rel="noopener noreferrer">
+          <a href="/" rel="noopener noreferrer">
             <Avatar radius={"md"} src={logo} size={"md"} alt="Data354 Logo" />
           </a>
           <span className='ml-5 font-extrabold'>AQ54</span>
@@ -35,10 +40,11 @@ const Header = () => {
       </Grid.Col>
       <Grid.Col span={9} >
         <Flex gap={50} align={"center"} justify={"end"} className='hidden lg:flex' >
-          <a href='/article' className="hover:text-red-500">Qualité de l'air</a>
-          <a href='/project' className="hover:text-red-500">Projet AQ54</a>
+          <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500" : ""}`}>Accueil</a>
+          <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500" : ""}`}>Qualité de l'air</a>
+          <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500" : ""}`}>Projet AQ54</a>
           <a href='https://aq54-app-m3okm5mmqa-ez.a.run.app' target='blank' className="hover:text-red-500">Visualisation des données</a>
-          <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="bg-red-700">Contactez-nous</Button>
+          <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="bg-red-700 hover:bg-red-800">Contactez-nous</Button>
         </Flex>
         <div className='flex justify-end lg:hidden'>
           <Menu shadow="md">
@@ -47,10 +53,10 @@ const Header = () => {
                 <IconMenu color='white' />
               </ActionIcon>
             </Menu.Target>
-
             <Menu.Dropdown>
+              <Menu.Item component="a" href="/">Accueil</Menu.Item>
               <Menu.Item component="a" href="/article">Qualité de l'air</Menu.Item>
-              <Menu.Item component="a" href="/project" target="_blank">Projet AQ54</Menu.Item>
+              <Menu.Item component="a" href="/project">Projet AQ54</Menu.Item>
               <Menu.Item component="a" href="https://aq54-app-m3okm5mmqa-ez.a.run.app" target="_blank">Visualisation des données</Menu.Item>
               <Menu.Item component="a" href="" target="_blank">Nous contacter</Menu.Item>
             </Menu.Dropdown>
@@ -86,7 +92,7 @@ const Banner = () => {
             <p className='text-md text-orange-500 self-center text-center'>moderate</p>
             {/* <Text fz={30} >🥵😊😟😷</Text> */}
           </div>
-          <p className="bg-red-600 animate-pulse p-1"></p>
+          <div className="bg-red-600 animate-pulse p-1"></div>
           <Stack className="bg-gray-800" p={10}>
             <HoverCard withArrow width={"target"} shadow="md">
               <HoverCard.Target>
@@ -271,11 +277,9 @@ const Contacts = () => {
           <p><b>Telephone</b> : +225 07 1008 1410</p>
           <p><b>Mail</b> : luca.thommen@data354.co</p>
           <p><b>Adresse</b> : Cocody, Riviera Boulevard Y4</p>
-          <p>
-            <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
-              <Avatar alt="logo facebook" src={iconLinkedin} />
-            </a>
-          </p>
+          <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
+            <Avatar alt="logo facebook" src={iconLinkedin} />
+          </a>
         </div>
       </div>
     </div>
@@ -290,10 +294,9 @@ const AppFooter = () => {
   );
 };
 
-const Home = () => {
+export const Home = () => {
   return (
     <>
-      <Header />
       <Banner />
       <div className='p-10 py-20 space-y-20 md:px-20 lg:p-36 mx-auto'>
         <PollutioDescription />
@@ -302,9 +305,18 @@ const Home = () => {
       </div>
       <Map />
       <Contacts />
+    </>
+  )
+}
+
+const Root = () => {
+  return (
+    <>
+      <Header />
+      <Outlet />
       <AppFooter />
     </>
   );
 }
 
-export default Home;
+export default Root;
