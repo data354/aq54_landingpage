@@ -43,7 +43,7 @@ export const Header = () => {
           <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500" : ""}`}>Accueil</a>
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500" : ""}`}>Projet AQ54</a>
-          <a href='https://aq54-app-m3okm5mmqa-ez.a.run.app' target='blank' className="hover:text-red-500">Visualisation des données</a>
+          <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500">Visualisation des données</a>
           <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="bg-red-700 hover:bg-red-800">Contactez-nous</Button>
         </Flex>
         <div className='flex justify-end lg:hidden'>
@@ -53,12 +53,12 @@ export const Header = () => {
                 <IconMenu color='white' />
               </ActionIcon>
             </Menu.Target>
-            <Menu.Dropdown>
-              <Menu.Item component="a" href="/">Accueil</Menu.Item>
-              <Menu.Item component="a" href="/article">Qualité de l'air</Menu.Item>
-              <Menu.Item component="a" href="/project">Projet AQ54</Menu.Item>
-              <Menu.Item component="a" href="https://aq54-app-m3okm5mmqa-ez.a.run.app" target="_blank">Visualisation des données</Menu.Item>
-              <Menu.Item component="a" href="" target="_blank">Nous contacter</Menu.Item>
+            <Menu.Dropdown className='bg-gray-800 border-0'>
+              <Menu.Item onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/" ? "text-red-500" : "text-white"}`} component="a" >Accueil</Menu.Item>
+              <Menu.Item onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/article" ? "text-red-500" : "text-white"}`} component="a">Qualité de l'air</Menu.Item>
+              <Menu.Item onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/project" ? "text-red-500" : "text-white"}`} component="a">Projet AQ54</Menu.Item>
+              <Menu.Item className={`text-white hover:text-red-500 font-bold `} component="a" href="https://aq54.visualisation.data354.com/" target="_blank">Visualisation des données</Menu.Item>
+              <Menu.Item className={`text-white hover:text-red-500 font-bold`} component="a" href="" target="_blank">Nous contacter</Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </div>
