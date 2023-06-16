@@ -2,7 +2,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind variants;
 
+@layer components {
+  .btn-primary {
+    @apply bg-red-700 hover:bg-red-800
+  }
+}
+
+@layer base {
+  p, li{
+    @apply text-lg text-gray-500 text-justify leading-10
+  }
+  h2 {
+    @apply text-4xl sm:text-5xl lg:text-6xl font-bold
+  }
+}
 
 body {
   margin: 0 !important;
