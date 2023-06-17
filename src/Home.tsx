@@ -125,13 +125,14 @@ const Banner = () => {
 }
 
 const PollutioDescription = () => {
+  const navigate = useNavigate()
   return <div id="pollutionDescription">
     <h2 className='text-gray-500'>La qualité de l'air</h2>
     <p className='text-gray-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
     <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
       <p>
         Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
-        <a href='#' className='text-blue-500 hover:text-blue-600'>En savoir plus </a>
+        <a onClick={() => navigate("/article") } className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
       </p>
       <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-10 xl:p-14">
         <div style={{ backgroundImage: `url("${fondTraffic}")` }}
