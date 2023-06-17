@@ -134,38 +134,30 @@ const PollutioDescription = () => {
         Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
         <a onClick={() => navigate("/article") } className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
       </p>
-      <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-10 xl:p-14">
+      <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-5 xl:p-10">
         <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-          className='h-44 lg:h-80 bg-red-500 w-full bg-blend-multiply bg-cover flex justify-center items-center'>
+          className='h-44 lg:h-80 bg-gray-200 w-full bg-blend-multiply bg-cover flex justify-center items-center'>
           <p className='
-          bg-opacity-70 
           text-white p-2 
-          font-extralight 
-          text-3xl text-opacity-70 -tracking-tighter' >Traffic</p>
+          text-3xl -tracking-tighter text-center' >Traffic</p>
         </div>
         <div style={{ backgroundImage: `url("${fondDechets}")` }}
-          className='h-44 bg-gray-500 lg:h-80 w-full bg-blend-multiply bg-cover  flex justify-center items-center'>
+          className='h-44 bg-gray-200 lg:h-80 w-full bg-blend-multiply bg-cover  flex justify-center items-center'>
           <p className='
-          bg-opacity-70 
           text-white p-2 
-          font-extralight 
-          text-3xl text-opacity-70 -tracking-tighter' >Incinération de déchets</p>
+          text-3xl -tracking-tighter text-center' >Incinération de déchets</p>
         </div>
         <div style={{ backgroundImage: `url("${fondUsine}")` }}
-          className='h-44 bg-amber-500 lg:h-80 w-full bg-blend-multiply bg-cover  flex justify-center items-center'>
+          className='h-44 bg-gray-200 lg:h-80 w-full bg-blend-multiply bg-cover  flex justify-center items-center'>
           <p className='
-          bg-opacity-70 
           text-white p-2 
-          font-extralight 
-          text-3xl text-opacity-70 -tracking-tighter' >Industrie</p>
+          text-3xl -tracking-tighter text-center' >Industrie</p>
         </div>
         <div style={{ backgroundImage: `url("${fondPoisson}")` }}
-          className='h-44 bg-green-500 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-center items-center'>
+          className='h-44 bg-gray-200 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-center items-center'>
           <p className='
-          bg-opacity-70 
           text-white p-2 
-          font-extralight 
-          text-3xl text-opacity-70 -tracking-tighter' >Cuisson traditionnelle</p>
+          text-3xl -tracking-tighter text-center' >Cuisson traditionnelle</p>
         </div>
         <p className='text-center text-sm mt-2 col-span-full'>Sources urbaines de pollution de l'air </p>
       </div>
@@ -186,7 +178,7 @@ const Projects = () => {
           <li>Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b> aux <b>décideurs, scientifiques, entreprises, organisations</b> et aux <b>citoyens</b>.</li>
         </ul>
       </div>
-      <img className='xl:col-span-2 xl:order-1 xl:p-24' src={fondAq54} />
+      <img className='xl:col-span-2 xl:order-1 xl:p-10' src={fondAq54} />
     </div>
 
     <p className='my-20 text-center text-4xl opacity-40 text-gray- leading-10'><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</p>
