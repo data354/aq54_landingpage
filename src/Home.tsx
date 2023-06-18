@@ -55,7 +55,7 @@ const Header = () => {
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500" : ""}`}>Projet AQ54</a>
           <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500">Visualisation des données</a>
-          <Button leftIcon={<IconPhoneCall />} size="md" radius={0} className="btn-primary">Contactez-nous</Button>
+          <Button onClick={() => SmoothScrolling('contact')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
         </Flex>
         <div className='flex justify-end lg:hidden'>
           <Menu shadow="md">
@@ -69,7 +69,7 @@ const Header = () => {
               <Menu.Item onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/article" ? "text-red-500" : "text-white"}`} component="a">Qualité de l'air</Menu.Item>
               <Menu.Item onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/project" ? "text-red-500" : "text-white"}`} component="a">Projet AQ54</Menu.Item>
               <Menu.Item className={`text-white hover:text-red-500 font-bold `} component="a" href="https://aq54.visualisation.data354.com/" target="_blank">Visualisation des données</Menu.Item>
-              <Menu.Item className={`text-white hover:text-red-500 font-bold`} component="a" href="" target="_blank">Nous contacter</Menu.Item>
+              <Menu.Item onClick={() => SmoothScrolling('contact')} className={`text-white hover:text-red-500 font-bold`}>Nous contacter</Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </div>
@@ -89,7 +89,7 @@ const Banner = () => {
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
         </p>
-        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconPlus />} radius={0} size="md" className="btn-primary" mt={30}>En savoir plus</Button>
+        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconPlus />} radius={0} className="btn-primary" mt={30}>En savoir plus</Button>
       </div>
       <div className='col-span-2 sm:col-span-1 sm:max-xl:col-start-2'>
         <div className='sticky top-36 backdrop-blur-lg bg-white opacity-90'>
@@ -166,6 +166,7 @@ const PollutioDescription = () => {
 }
 
 const Projects = () => {
+  const navigate = useNavigate()
   return <div id="projects">
     <h2 className='text-red-700'>Le projet AQ54</h2>
     <p className='text-gray-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
@@ -192,7 +193,7 @@ const Projects = () => {
           <li>L’étude sur <b>l’impact du bitumage</b> de route sur la qualité de l’air.</li>
         </ul>
       </div>
-      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-10 xl:p-24'>
+      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-5 xl:p-10'>
         <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
           className='h-44 lg:h-80 w-full bg-center bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie du bonheur</p>
@@ -206,9 +207,9 @@ const Projects = () => {
       </div>
     </div>
 
-    {/* <div className='flex items-center justify-center'>
-      <Button rightIcon={<IconPlus />} radius={0} size="md" className="bg-red-700" mt={30}>En savoir plus sur le projet</Button>
-    </div> */}
+    <div className='flex items-center justify-center'>
+      <Button onClick={() => { navigate("/project") }} rightIcon={<IconPlus />} radius={0} className="btn-primary" mt={30}>En savoir plus sur le projet</Button>
+    </div>
   </div>
 }
 
@@ -270,7 +271,7 @@ const Partenaires = () => {
 
 const Contacts = () => {
   return (
-    <div className="bg-gray-950 p-10 md:px-20 lg:p-32">
+    <div id='contact' className="bg-gray-950 p-10 md:px-20 lg:p-32">
       <p className="font-extrabold text-4xl text-gray-50">Contactez-nous</p>
       <div className='grid grid-flow-row md:grid-cols-2'>
         <div className='order-2'>
