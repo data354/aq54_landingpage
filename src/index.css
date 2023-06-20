@@ -11,6 +11,9 @@
   .link {
     @apply text-blue-500 hover:text-blue-600
   }
+  .picture-animated {
+    @apply lg:scale-110 lg:transform lg:duration-500 lg:grayscale-0 lg:z-40
+  }
 }
 
 @layer base {

@@ -10,7 +10,7 @@ import logoMinedd from "./assets/minedd.jpg"
 import logoDiis from "./assets/diis.png"
 import fondPoisson from "./assets/poisson.webp"
 import iconLinkedin from "./assets/linkedin.png"
-import { IconMenu, IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
+import { IconArrowDown, IconMenu, IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
 import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Stack, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
@@ -22,7 +22,8 @@ import fondSensor188_3 from "./assets/sensor188_3.jpeg"
 import fondSensor189_1 from "./assets/sensor189_1.jpeg"
 import fondSensor189_3 from "./assets/sensor189_3.jpeg"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import moment from 'moment'
 
 export function SmoothScrolling(sectionId: string) {
   const section = document.getElementById(sectionId);
@@ -33,7 +34,6 @@ export function SmoothScrolling(sectionId: string) {
     });
   }
 }
-
 const Header = () => {
 
   const navigate = useNavigate()
@@ -79,44 +79,68 @@ const Header = () => {
 }
 
 const Banner = () => {
+
+  const [aqiInfo, setAqiInfo] = useState<any>(null)
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_HOST}/user/stationAQI/byday/SMART189/${moment().format("YYYY-MM-DD")}`)
+      .then(async (response) => {
+        let result = (await response.json())[0]
+        console.log(result);
+        setAqiInfo(result)
+      })
+  }, [])
+
   return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner"
-    className=" h-full bg-cover bg-blend-multiply bg-black bg-opacity-40 p-10 md:p-20 lg:p-36">
-    <div className='text-white grid gap-5 grid-cols-2 lg:gap-20 xl:grid-cols-3'>
-      <div className='col-span-2'>
+    className="bg-cover bg-blend-multiply bg-black bg-opacity-40 p-10 md:p-20 lg:p-24">
+    <div className='text-white grid gap-5 grid-cols-2 lg:gap-20 xl:grid-cols-4'>
+      <div className='col-span-2 '>
         <h2 className='text-4xl font-bold md:text-6xl lg:text-7xl'>L'Open data contre la pollution de l'air</h2>
         <p className='text-xl text-white lg:text-3xl mt-5 text-justify md:mt-10 font-extralight'>
           La pollution de l’air est un enjeu de premier rang pour la santé publique,
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
         </p>
-        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconPlus />} radius={0} className="btn-primary" mt={30}>En savoir plus</Button>
+        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconArrowDown />} radius={0} className="btn-primary" mt={30}>En savoir plus</Button>
       </div>
-      <div className='col-span-2 sm:col-span-1 sm:max-xl:col-start-2'>
-        <div className='sticky top-36 backdrop-blur-lg bg-white opacity-90'>
-          <p className='text-gray-950 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
-          <div className="text-gray-500 p-5 grid grid-cols-3">
-            <span className='text-5xl text-center self-center'>😟</span>
-            <div className='text-center'>
-              <h2 className='text-6xl font-bold'>15</h2>
-              <h6 className='text-xs'>US AQI</h6>
+      <div id='infoPopup' className='col-span-2 md:col-span-1 md:max-xl:col-start-2 xl:col-span-2'>
+        <div className="sticky top-36 xl:max-w-md mx-auto">
+          <div className='shadow-2xl bg-slate-900 bg-opacity-20 backdrop-blur border border-slate-900 border-opacity-10'>
+            <p className='text-slate-100 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
+            <div className="text-gray-500 p-5 grid grid-cols-3">
+              <span className='text-5xl text-center self-center'>😟</span>
+              {
+                aqiInfo !== null &&
+                <>
+                  <div className='text-center'>
+                    <h2 className='text-slate-200 text-7xl font-bold'>{aqiInfo.AQI}</h2>
+                    <h6 className='text-slate-200 text-xs'>{aqiInfo["Most_Responsible_Pollutant"]} AQI</h6>
+                  </div>
+                  <p className={`text-md text-orange-500 self-center text-center`}>{aqiInfo["Gravity"]}</p>
+                </>
+              }
+              {/* <Text fz={30} >🥵😊😟😷</Text> */}
             </div>
-            <p className='text-md text-orange-500 self-center text-center'>moderate</p>
-            {/* <Text fz={30} >🥵😊😟😷</Text> */}
+            <div className="p-1 grid grid-cols-5 text-slate-100 opacity-90">
+              {
+                aqiInfo !== null && Object.keys(aqiInfo["AQIs"]).map((aqi: any, index: number) =>
+                  <div className={`flex flex-col text-center p-2 font-extralight`}><b className="font-extrabold">{aqi}</b> <span>{aqiInfo["AQIs"][aqi]}</span></div>
+                )
+              }
+            </div>
           </div>
-          <div className="bg-red-600 animate-pulse p-1"></div>
-          <div className="bg-gray-800 p-2">
-            <HoverCard withArrow width={"target"} shadow="md">
-              <HoverCard.Target>
-                <small className='line-clamp-1'>Recommandations :  Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
-                  les enfants et les personnes ayant un statut socio-économique faible
-                  doivent réduire les efforts importants ou prolongés. </small>
-              </HoverCard.Target>
-              <HoverCard.Dropdown>
-                <small className='text-gray-700'>Les personnes souffrant de maladies cardiaques ou pulmonaires, les personnes âgées,
-                  les enfants et les personnes ayant un statut socio-économique faible
-                  doivent réduire les efforts importants ou prolongés. </small>
-              </HoverCard.Dropdown>
-            </HoverCard>
+          <div className="bg-slate-800 bg-opacity-40 text-md backdrop-blur-xl p-2">
+            {
+              aqiInfo !== null &&
+              <HoverCard withArrow width={"target"} shadow="md">
+                <HoverCard.Target>
+                  <small className='line-clamp-1'>Recommandations :  {aqiInfo["Recommendation"]} </small>
+                </HoverCard.Target>
+                <HoverCard.Dropdown className='bg-slate-800 bg-opacity-40 text-md backdrop-blur-xl text-white border-none'>
+                  <small>{aqiInfo["Recommendation"]}</small>
+                </HoverCard.Dropdown>
+              </HoverCard>
+            }
           </div>
         </div>
       </div>
@@ -132,34 +156,42 @@ const PollutioDescription = () => {
     <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
       <p>
         Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
-        <a onClick={() => navigate("/article") } className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
+        <a onClick={() => navigate("/article")} className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
       </p>
-      <div className="grid grid-flow-row xl:col-span-2 sm:grid-cols-2  lg:gap-5 xl:p-10">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:col-span-2 xl:gap-0 group-hover:scale-125">
         <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-          className='h-44 lg:h-80 bg-gray-200 w-full bg-blend-multiply bg-cover flex justify-center items-center'>
-          <p className='
+          className='h-44 lg:h-80 xl:h-96  bg-cover grayscale-[70%]'>
+          <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
+            <p className='
           text-white p-2 
-          text-3xl -tracking-tighter text-center' >Traffic</p>
+          text-lg -tracking-tighter text-center font-extralight' >Trafic</p>
+          </div>
         </div>
         <div style={{ backgroundImage: `url("${fondDechets}")` }}
-          className='h-44 bg-gray-200 lg:h-80 w-full bg-blend-multiply bg-cover  flex justify-center items-center'>
-          <p className='
+          className={`h-44 lg:h-80 xl:h-96 w-full bg-cover grayscale-[70%]`}>
+          <div className="h-full flex justify-center items-end bg-gradient-to-t from-zinc-500 from-5% to-transparent">
+            <p className='
           text-white p-2 
-          text-3xl -tracking-tighter text-center' >Incinération de déchets</p>
+          text-lg -tracking-tighter text-center font-extralight' >Incinération de déchets</p>
+          </div>
         </div>
         <div style={{ backgroundImage: `url("${fondUsine}")` }}
-          className='h-44 bg-gray-200 lg:h-80 w-full bg-blend-multiply bg-cover  flex justify-center items-center'>
-          <p className='
+          className='h-44 lg:h-80 xl:h-96 w-full bg-cover picture-animated'>
+          <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
+            <p className='
           text-white p-2 
-          text-3xl -tracking-tighter text-center' >Industrie</p>
+          text-lg -tracking-tighter text-center font-extralight' >Industrie</p>
+          </div>
         </div>
         <div style={{ backgroundImage: `url("${fondPoisson}")` }}
-          className='h-44 bg-gray-200 lg:h-80 w-full bg-blend-multiply bg-cover flex justify-center items-center'>
-          <p className='
+          className='h-44 lg:h-80 xl:h-96 w-full bg-cover grayscale-[70%]'>
+          <div className="h-full flex justify-center items-end bg-gradient-to-t from-zinc-500 from-5% to-transparent">
+            <p className='
           text-white p-2 
-          text-3xl -tracking-tighter text-center' >Cuisson traditionnelle</p>
+          text-lg -tracking-tighter text-center font-extralight' >Cuisson traditionnelle</p>
+          </div>
         </div>
-        <p className='text-center text-sm mt-2 col-span-full'>Sources urbaines de pollution de l'air </p>
+        <p className='text-center text-md mt-5 col-span-full'>Sources urbaines de pollution de l'air </p>
       </div>
     </div>
   </div>
@@ -193,17 +225,17 @@ const Projects = () => {
           <li>L’étude sur <b>l’impact du bitumage</b> de route sur la qualité de l’air.</li>
         </ul>
       </div>
-      <div className='grid grid-cols-2 lg:col-span-2 lg:gap-5 xl:p-10'>
+      <div className='grid sm:grid-cols-2 sm:col-span-2 xl:grid-cols-4'>
         <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
-          className='h-44 lg:h-80 w-full bg-center bg-cover flex justify-end items-end'>
+          className='order-1 h-44 lg:h-80 w-full bg-center bg-cover flex justify-end items-end'>
           <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie du bonheur</p>
         </div>
         <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
-          className='h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
+          className='order-3 sm:order-2 h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
           <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie rue ministre</p>
         </div>
-        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
-        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='h-44 lg:h-80 w-full bg-cover bg-center'></div>
+        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='order-2 sm:order-3 h-44 lg:h-80 w-full bg-cover bg-center'></div>
+        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='order-4 h-44 lg:h-80 w-full bg-cover bg-center'></div>
       </div>
     </div>
 
@@ -271,36 +303,38 @@ const Partenaires = () => {
 
 const Contacts = () => {
   return (
-    <div id='contact' className="bg-gray-950 p-10 md:px-20 lg:p-32">
-      <p className="font-extrabold text-4xl text-gray-50">Contactez-nous</p>
-      <div className='grid grid-flow-row md:grid-cols-2'>
-        <div className='order-2'>
-          <Stack mt={20} spacing={15}>
-            <Grid>
-              <Grid.Col span={6}>
-                <label htmlFor="nom" className="text-white">Nom et prenoms</label>
-                <input id="nom" className="bg-gray-500 p-3 text-lg outline-0 text-white w-full mt-4" />
-              </Grid.Col>
-              <Grid.Col span={6}>
-                <label htmlFor="email" className="text-white">Email</label>
-                <input id="email" className="bg-gray-500 p-3 text-lg outline-0 text-white w-full mt-4" />
-              </Grid.Col>
-            </Grid>
-            <label htmlFor="entreprise" className="text-white">Organisation</label>
-            <input id="entreprise" className="bg-gray-500 p-3 text-lg outline-0 text-white w-full" />
-            <label htmlFor="message" className="text-white">Message</label>
-            <textarea id="message" className="bg-gray-500 p-3 text-lg outline-0 text-white" />
-          </Stack>
-          <Button fullWidth rightIcon={<IconSend />} radius={0} size="lg" className="bg-red-700" mt={50}>Soumettre</Button>
-        </div>
-        <div className='text-white space-y-5 mt-10 order-1'>
-          <h6><b>Whatsapp</b> : +33 6 76 38 64 12</h6>
-          <h6><b>Telephone</b> : +225 07 1008 1410</h6>
-          <h6><b>Mail</b> : luca.thommen@data354.co</h6>
-          <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
-          <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
-            <Avatar alt="logo facebook" src={iconLinkedin} />
-          </a>
+    <div id='contact' className="bg-gray-950 p-10 md:px-20 lg:px-24">
+      <div className='max-w-4xl mx-auto'>
+        <p className="font-extrabold text-4xl text-slate-200">Contactez-nous</p>
+        <div className='grid md:grid-cols-2'>
+          <div className='order-2 text-slate-300'>
+            <Stack mt={20} spacing={15}>
+              <Grid>
+                <Grid.Col span={6}>
+                  <label htmlFor="nom" className="">Nom et prenoms</label>
+                  <input id="nom" className="bg-gray-500 p-3 text-lg outline-0 text-slate-200  w-full mt-4" />
+                </Grid.Col>
+                <Grid.Col span={6}>
+                  <label htmlFor="email" className="">Email</label>
+                  <input id="email" className="bg-gray-500 p-3 text-lg outline-0 text-slate-200 w-full mt-4" />
+                </Grid.Col>
+              </Grid>
+              <label htmlFor="entreprise" className="">Organisation</label>
+              <input id="entreprise" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0  w-full" />
+              <label htmlFor="message" className="">Message</label>
+              <textarea id="message" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0 " />
+            </Stack>
+            <Button fullWidth rightIcon={<IconSend />} radius={0} size="lg" className="btn-primary" mt={50}>Soumettre</Button>
+          </div>
+          <div className='text-slate-300 space-y-5 mt-10 order-1'>
+            <h6><b>Whatsapp</b> : +33 6 76 38 64 12</h6>
+            <h6><b>Telephone</b> : +225 07 1008 1410</h6>
+            <h6><b>Mail</b> : luca.thommen@data354.co</h6>
+            <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
+            <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
+              <Avatar alt="logo facebook" src={iconLinkedin} />
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -322,13 +356,12 @@ export const Home = () => {
   return (
     <>
       <Banner />
-      <div id='info' className='py-10 md:py-20 px-5 space-y-20 md:px-20 lg:p-32 mx-auto'>
+      <div id='info' className='py-10 md:py-20 px-5 space-y-36 md:px-20 lg:p-32 mx-auto'>
         <PollutioDescription />
         <Projects />
         <Partenaires />
       </div>
       <Map />
-      <Contacts />
     </>
   )
 }
@@ -338,6 +371,7 @@ const Root = () => {
     <>
       <Header />
       <Outlet />
+      <Contacts />
       <AppFooter />
     </>
   );
