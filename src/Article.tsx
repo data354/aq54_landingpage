@@ -15,7 +15,7 @@ export default function Article() {
           </h2>
           <div className="p-3 bg-stone-100 my-5 flex items-center sm:space-x-5">
             <IconAlertCircle className="text-red-800 hidden sm:block" />
-            <p> La qualité de l’air provient de la concentration en polluants </p>
+            <p> La qualité de l’air provient de la concentration en polluants.</p>
           </div>
           <li className="flex mb-4 items-center">
             <span className="flex-shrink-0 flex mr-4 items-center justify-center w-8 h-8 bg-gray-500 rounded-full text-gray-50 font-bold font-heading">

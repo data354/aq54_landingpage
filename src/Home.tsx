@@ -34,6 +34,7 @@ export function SmoothScrolling(sectionId: string) {
     });
   }
 }
+
 const Header = () => {
 
   const navigate = useNavigate()
@@ -51,9 +52,9 @@ const Header = () => {
       </Grid.Col>
       <Grid.Col span={9} >
         <Flex gap={50} align={"center"} justify={"end"} className='hidden lg:flex' >
-          <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500" : ""}`}>Accueil</a>
-          <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500" : ""}`}>Qualité de l'air</a>
-          <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500" : ""}`}>Projet AQ54</a>
+          <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500 font-bold" : ""}`}>Accueil</a>
+          <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500 font-bold" : ""}`}>Qualité de l'air</a>
+          <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500 font-bold" : ""}`}>Projet AQ54</a>
           <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500">Visualisation des données</a>
           <Button onClick={() => SmoothScrolling('contact')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
         </Flex>
@@ -82,6 +83,28 @@ const Banner = () => {
 
   const [aqiInfo, setAqiInfo] = useState<any>(null)
 
+  function getEmoji(aqi: number) {
+    switch (aqi) {
+      case 1:
+      case 2: return "😊";
+      case 3: return "😷";
+      case 4:
+      case 5: return "😟";
+      case 6: return "🥵";
+    }
+  }
+
+  function getCategory(aqi: number) {
+    switch (aqi) {
+      case 1: return "Good"
+      case 2: return "Moderate";
+      case 3: return "😷";
+      case 4: return "😊"
+      case 5: return "😟";
+      case 6: return "🥵";
+    }
+  }
+
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationAQI/byday/SMART189/${moment().format("YYYY-MM-DD")}`)
       .then(async (response) => {
@@ -92,7 +115,7 @@ const Banner = () => {
   }, [])
 
   return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner"
-    className="bg-cover bg-blend-multiply bg-black bg-opacity-40 p-10 md:p-20 lg:p-24">
+    className="bg-cover bg-blend-multiply bg-slate-800 bg-opacity-40 p-10 md:p-20 lg:p-24">
     <div className='text-white grid gap-5 grid-cols-2 lg:gap-20 xl:grid-cols-4'>
       <div className='col-span-2 '>
         <h2 className='text-4xl font-bold md:text-6xl lg:text-7xl'>L'Open data contre la pollution de l'air</h2>
@@ -108,10 +131,10 @@ const Banner = () => {
           <div className='shadow-2xl bg-slate-900 bg-opacity-20 backdrop-blur border border-slate-900 border-opacity-10'>
             <p className='text-slate-100 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
             <div className="text-gray-500 p-5 grid grid-cols-3">
-              <span className='text-5xl text-center self-center'>😟</span>
               {
                 aqiInfo !== null &&
                 <>
+                  <span className='text-5xl text-center self-center'>{getEmoji(Number(aqiInfo["Gravity"]))}</span>
                   <div className='text-center'>
                     <h2 className='text-slate-200 text-7xl font-bold'>{aqiInfo.AQI}</h2>
                     <h6 className='text-slate-200 text-xs'>{aqiInfo["Most_Responsible_Pollutant"]} AQI</h6>
@@ -119,12 +142,11 @@ const Banner = () => {
                   <p className={`text-md text-orange-500 self-center text-center`}>{aqiInfo["Gravity"]}</p>
                 </>
               }
-              {/* <Text fz={30} >🥵😊😟😷</Text> */}
             </div>
             <div className="p-1 grid grid-cols-5 text-slate-100 opacity-90">
               {
                 aqiInfo !== null && Object.keys(aqiInfo["AQIs"]).map((aqi: any, index: number) =>
-                  <div className={`flex flex-col text-center p-2 font-extralight`}><b className="font-extrabold">{aqi}</b> <span>{aqiInfo["AQIs"][aqi]}</span></div>
+                  <div key={index} className={`flex flex-col text-center p-2 font-extralight`}><b className="font-extrabold">{aqi}</b> <span>{aqiInfo["AQIs"][aqi]}</span></div>
                 )
               }
             </div>
@@ -151,8 +173,8 @@ const Banner = () => {
 const PollutioDescription = () => {
   const navigate = useNavigate()
   return <div id="pollutionDescription">
-    <h2 className='text-gray-500'>La qualité de l'air</h2>
-    <p className='text-gray-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
+    <h2 className='text-slate-500'>La qualité de l'air</h2>
+    <p className='text-slate-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
     <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
       <p>
         Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
@@ -201,10 +223,10 @@ const Projects = () => {
   const navigate = useNavigate()
   return <div id="projects">
     <h2 className='text-red-700'>Le projet AQ54</h2>
-    <p className='text-gray-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
+    <p className='text-slate-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
     <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
       <div className='text-justify xl:order-2'>
-        <p className='text-lg text-gray-400 font-bold sm:text-3xl'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
+        <p className='text-lg text-slate-600 font-bold sm:text-3xl'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
         <ul className='list-decimal list-inside space-y-5 text-gray-500 sm:text-xl mt-10'>
           <li>Doter Abidjan d’un <b>réseau de capteurs</b> suffisant pour obtenir une <b>cartographie de la qualité de l’air</b> en temps réel,</li>
           <li><b>Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne,</li>
@@ -321,8 +343,8 @@ const Contacts = () => {
               </Grid>
               <label htmlFor="entreprise" className="">Organisation</label>
               <input id="entreprise" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0  w-full" />
-              <label htmlFor="message" className="">Message</label>
-              <textarea id="message" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0 " />
+              {/* <label htmlFor="message" className="">Message</label>
+              <textarea id="message" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0 " /> */}
             </Stack>
             <Button fullWidth rightIcon={<IconSend />} radius={0} size="lg" className="btn-primary" mt={50}>Soumettre</Button>
           </div>
@@ -356,7 +378,7 @@ export const Home = () => {
   return (
     <>
       <Banner />
-      <div id='info' className='py-10 md:py-20 px-5 space-y-36 md:px-20 lg:p-32 mx-auto'>
+      <div id='info' className='py-10 md:py-20 px-5 space-y-20 md:px-20 lg:p-32 mx-auto'>
         <PollutioDescription />
         <Projects />
         <Partenaires />
