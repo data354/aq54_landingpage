@@ -10,7 +10,8 @@ import logoMinedd from "./assets/minedd.jpg"
 import logoDiis from "./assets/diis.png"
 import fondPoisson from "./assets/poisson.webp"
 import iconLinkedin from "./assets/linkedin.png"
-import { IconArrowDown, IconMenu, IconPhoneCall, IconPlus, IconSend } from "@tabler/icons-react";
+import iconGmail from "./assets/gmail.png"
+import { IconArrowDown, IconLoader2, IconMenu, IconPhoneCall, IconPlus, IconPointFilled, IconSend } from "@tabler/icons-react";
 import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Stack, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
@@ -82,36 +83,45 @@ const Header = () => {
 const Banner = () => {
 
   const [aqiInfo, setAqiInfo] = useState<any>(null)
+  const [loading, setLoading] = useState(false)
 
   function getEmoji(aqi: number) {
     switch (aqi) {
-      case 1:
-      case 2: return "😊";
-      case 3: return "😷";
+      case 1: return "😊"
+      case 2: return "😶";
+      case 3: return "😟";
       case 4:
-      case 5: return "😟";
+      case 5: return "😷";
       case 6: return "🥵";
     }
   }
 
-  function getCategory(aqi: number) {
+  function getCategory(aqi: number): [string, string] {
     switch (aqi) {
-      case 1: return "Good"
-      case 2: return "Moderate";
-      case 3: return "😷";
-      case 4: return "😊"
-      case 5: return "😟";
-      case 6: return "🥵";
+      case 1: return ["Good", "green"]
+      case 2: return ["Moderate", "yellow"];
+      case 3: return ["Unhealthy for sensitive", "orange"];
+      case 4: return ["Unhealthy", "red"];
+      case 5: return ["Very Unhealthy", "red"];
+      case 6: return ["Harzardous", "red"];
     }
+
+    return ["", ""]
   }
 
-  useEffect(() => {
+  function getAQIs() {
+    setLoading(true);
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationAQI/byday/SMART189/${moment().format("YYYY-MM-DD")}`)
       .then(async (response) => {
         let result = (await response.json())[0]
-        console.log(result);
+        setLoading(false);
         setAqiInfo(result)
       })
+      .catch(async (response) => { setLoading(false) })
+  }
+
+  useEffect(() => {
+    getAQIs()
   }, [])
 
   return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner"
@@ -129,17 +139,22 @@ const Banner = () => {
       <div id='infoPopup' className='col-span-2 md:col-span-1 md:max-xl:col-start-2 xl:col-span-2'>
         <div className="sticky top-36 xl:max-w-md mx-auto">
           <div className='shadow-2xl bg-slate-900 bg-opacity-20 backdrop-blur border border-slate-900 border-opacity-10'>
-            <p className='text-slate-100 text-center p-3 font-extralight'>Qualité de l'air à Abidjan</p>
+            <div className="flex items-center justify-center">
+              <p className='text-slate-100 p-3 font-extralight flex-1'>Qualité de l'air à Abidjan</p>
+              {
+                loading ? <IconLoader2 className='animate-spin opacity-60 mx-5' /> : aqiInfo !== null && <IconPointFilled onClick={() => getAQIs()} style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className='mx-5 cursor-pointer' />
+              }
+            </div>
             <div className="text-gray-500 p-5 grid grid-cols-3">
               {
                 aqiInfo !== null &&
                 <>
-                  <span className='text-5xl text-center self-center'>{getEmoji(Number(aqiInfo["Gravity"]))}</span>
+                  <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center`}>{getCategory(aqiInfo["Gravity"])[0]}</p>
                   <div className='text-center'>
-                    <h2 className='text-slate-200 text-7xl font-bold'>{aqiInfo.AQI}</h2>
+                    <h2 className='text-slate-200 text-5xl font-bold'>{aqiInfo.AQI}</h2>
                     <h6 className='text-slate-200 text-xs'>{aqiInfo["Most_Responsible_Pollutant"]} AQI</h6>
                   </div>
-                  <p className={`text-md text-orange-500 self-center text-center`}>{aqiInfo["Gravity"]}</p>
+                  <span className='text-4xl text-center self-center'>{getEmoji(Number(aqiInfo["Gravity"]))}</span>
                 </>
               }
             </div>
@@ -158,7 +173,7 @@ const Banner = () => {
                 <HoverCard.Target>
                   <small className='line-clamp-1'>Recommandations :  {aqiInfo["Recommendation"]} </small>
                 </HoverCard.Target>
-                <HoverCard.Dropdown className='bg-slate-800 bg-opacity-40 text-md backdrop-blur-xl text-white border-none'>
+                <HoverCard.Dropdown className='bg-slate-800 lg:bg-opacity-60 text-md backdrop-blur-xl text-white border-none'>
                   <small>{aqiInfo["Recommendation"]}</small>
                 </HoverCard.Dropdown>
               </HoverCard>
@@ -181,12 +196,12 @@ const PollutioDescription = () => {
         <a onClick={() => navigate("/article")} className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
       </p>
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:col-span-2 xl:gap-0 group-hover:scale-125">
-        <div style={{ backgroundImage: `url("${fondTraffic}")` }}
+        <div style={{ backgroundImage: `url("${fondUsine}")` }}
           className='h-44 lg:h-80 xl:h-96  bg-cover grayscale-[70%]'>
           <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
             <p className='
           text-white p-2 
-          text-lg -tracking-tighter text-center font-extralight' >Trafic</p>
+          text-lg -tracking-tighter text-center font-extralight' >Industrie</p>
           </div>
         </div>
         <div style={{ backgroundImage: `url("${fondDechets}")` }}
@@ -197,12 +212,12 @@ const PollutioDescription = () => {
           text-lg -tracking-tighter text-center font-extralight' >Incinération de déchets</p>
           </div>
         </div>
-        <div style={{ backgroundImage: `url("${fondUsine}")` }}
+        <div style={{ backgroundImage: `url("${fondTraffic}")` }}
           className='h-44 lg:h-80 xl:h-96 w-full bg-cover picture-animated'>
           <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
             <p className='
           text-white p-2 
-          text-lg -tracking-tighter text-center font-extralight' >Industrie</p>
+          text-lg -tracking-tighter text-center font-extralight' >Trafic</p>
           </div>
         </div>
         <div style={{ backgroundImage: `url("${fondPoisson}")` }}
@@ -240,24 +255,26 @@ const Projects = () => {
 
     <div className='mt-10 grid gap-5 xl:grid-cols-3 lg:gap-10'>
       <div className='text-justify'>
-        <p className='text-lg text-gray-400 font-bold sm:text-3xl'>Pour initier le projet, Data354 a lancé sa <b>phase pilote</b> consistant en:</p>
+        <p className='text-lg text-slate-600 font-bold sm:text-3xl'>Pour initier le projet, Data354 a lancé sa <b>phase pilote</b> consistant en:</p>
         <ul className='list-decimal list-inside mt-10 space-y-5 text-gray-500 sm:text-xl'>
           <li><b>L’installation</b> de deux premiers capteurs en ville et une <b>période de récolte</b> de données,</li>
           <li>Le développement et tests de la <b>plateforme de visualisation</b>,</li>
           <li>L’étude sur <b>l’impact du bitumage</b> de route sur la qualité de l’air.</li>
         </ul>
       </div>
-      <div className='grid sm:grid-cols-2 sm:col-span-2 xl:grid-cols-4'>
+      <div className='grid sm:grid-cols-2 sm:col-span-2 xl:grid-cols-2 lg:gap-x-5 lg:p-20'>
         <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
-          className='order-1 h-44 lg:h-80 w-full bg-center bg-cover flex justify-end items-end'>
-          <p className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie du bonheur</p>
+          className='order-1 h-44 lg:h-80 w-full bg-center bg-cover'>
         </div>
         <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
-          className='order-3 sm:order-2 h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
-          <p color='white' className='bg-blue-950 bg-opacity-70 text-white p-2' >Pharmacie rue ministre</p>
+          className='order-3 sm:order-2 h-44 lg:h-80 w-full bg-cover bg-center'>
         </div>
-        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='order-2 sm:order-3 h-44 lg:h-80 w-full bg-cover bg-center'></div>
-        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='order-4 h-44 lg:h-80 w-full bg-cover bg-center'></div>
+        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='order-2 sm:order-3 h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
+          <p className='text-white p-2' >Pharmacie du bonheur</p>
+        </div>
+        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='order-4 h-44 lg:h-80 w-full bg-cover bg-center  flex justify-end items-end'>
+          <p color='white' className='text-white p-2' >Pharmacie rue ministre</p>
+        </div>
       </div>
     </div>
 
@@ -326,38 +343,17 @@ const Partenaires = () => {
 const Contacts = () => {
   return (
     <div id='contact' className="bg-gray-950 p-10 md:px-20 lg:px-24">
-      <div className='max-w-4xl mx-auto'>
-        <p className="font-extrabold text-4xl text-slate-200">Contactez-nous</p>
-        <div className='grid md:grid-cols-2'>
-          <div className='order-2 text-slate-300'>
-            <Stack mt={20} spacing={15}>
-              <Grid>
-                <Grid.Col span={6}>
-                  <label htmlFor="nom" className="">Nom et prenoms</label>
-                  <input id="nom" className="bg-gray-500 p-3 text-lg outline-0 text-slate-200  w-full mt-4" />
-                </Grid.Col>
-                <Grid.Col span={6}>
-                  <label htmlFor="email" className="">Email</label>
-                  <input id="email" className="bg-gray-500 p-3 text-lg outline-0 text-slate-200 w-full mt-4" />
-                </Grid.Col>
-              </Grid>
-              <label htmlFor="entreprise" className="">Organisation</label>
-              <input id="entreprise" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0  w-full" />
-              {/* <label htmlFor="message" className="">Message</label>
-              <textarea id="message" className="bg-gray-500 p-3 text-lg text-slate-200 outline-0 " /> */}
-            </Stack>
-            <Button fullWidth rightIcon={<IconSend />} radius={0} size="lg" className="btn-primary" mt={50}>Soumettre</Button>
-          </div>
-          <div className='text-slate-300 space-y-5 mt-10 order-1'>
-            <h6><b>Whatsapp</b> : +33 6 76 38 64 12</h6>
-            <h6><b>Telephone</b> : +225 07 1008 1410</h6>
-            <h6><b>Mail</b> : luca.thommen@data354.co</h6>
-            <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
-            <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
-              <Avatar alt="logo facebook" src={iconLinkedin} />
-            </a>
-          </div>
-        </div>
+      <p className="font-extrabold text-4xl text-slate-100 text-center">Contactez-nous</p>
+      <div className='text-slate-300 space-y-3 mt-10 order-1 text-center'>
+        <h6><b>Telephone</b> : +225 07 1008 1410</h6>
+        <h6><b>Mail</b> : aq54@data354.co</h6>
+        <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
+        <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
+          <Avatar alt="logo facebook" src={iconLinkedin} />
+        </a>
+        <a href="mailto:aq54@data354.com" className='inline-block ml-5' target="_blank" rel="noopener noreferrer">
+          <Avatar alt="logo facebook" src={iconGmail} />
+        </a>
       </div>
     </div>
   )
@@ -365,8 +361,8 @@ const Contacts = () => {
 
 const AppFooter = () => {
   return (
-    <div className="bg-gray-700 p-5">
-      <p className='text-white text-center text-sm'> {`Designed & built by Data354, 2023 CIV 🇨🇮`} - {`All rights reserved`}</p>
+    <div className="bg-slate-800 p-2 flex justify-center">
+      <small className='text-white text-center sm:text-sm'> {`Designed & built by Data354, 2023 CIV 🇨🇮`} - {`All rights reserved`}</small>
     </div>
   );
 };
