@@ -11,8 +11,8 @@ import logoDiis from "./assets/diis.png"
 import fondPoisson from "./assets/poisson.webp"
 import iconLinkedin from "./assets/linkedin.png"
 import iconGmail from "./assets/gmail.png"
-import { IconArrowDown, IconLoader2, IconMenu, IconPhoneCall, IconPlus, IconPointFilled, IconSend } from "@tabler/icons-react";
-import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Stack, Text, } from "@mantine/core";
+import { IconArrowDown, IconInfoCircle, IconInfoSmall, IconLoader2, IconMenu, IconPhoneCall, IconPlus, IconPointFilled, IconSend } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Popover, Stack, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
 import sensors from './data/sensors';
@@ -25,6 +25,7 @@ import fondSensor189_3 from "./assets/sensor189_3.jpeg"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import moment from 'moment'
+import aqiRanges from './data/aqi'
 
 export function SmoothScrolling(sectionId: string) {
   const section = document.getElementById(sectionId);
@@ -142,7 +143,17 @@ const Banner = () => {
             <div className="flex items-center justify-center">
               <p className='text-slate-100 p-3 font-extralight flex-1'>Qualité de l'air à Abidjan</p>
               {
-                loading ? <IconLoader2 className='animate-spin opacity-60 mx-5' /> : aqiInfo !== null && <IconPointFilled onClick={() => getAQIs()} style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className='mx-5 cursor-pointer' />
+                loading ? <IconLoader2 className='animate-spin opacity-60 mx-5' /> : aqiInfo !== null && <Popover position="right" withArrow shadow="md">
+                  <Popover.Target>
+                    <IconInfoCircle className='mx-5 opacity-80 cursor-pointer' />
+                  </Popover.Target>
+                  <Popover.Dropdown className='p-2 border-none backdrop-blur-xl'>
+                    <small className='text-slate-700 block font-bold'>Definition des catégories d'AQI</small>
+                    <div className="text-sm text-slate-500 flex flex-col">
+                      {aqiRanges['PM2.5'].map(range => <small>{range}</small>)}
+                    </div>
+                  </Popover.Dropdown>
+                </Popover>
               }
             </div>
             <div className="text-gray-500 p-5 grid grid-cols-3">
@@ -158,22 +169,18 @@ const Banner = () => {
                 </>
               }
             </div>
-            <div className="p-1 grid grid-cols-5 text-slate-100 opacity-90">
-              {
-                aqiInfo !== null && Object.keys(aqiInfo["AQIs"]).map((aqi: any, index: number) =>
-                  <div key={index} className={`flex flex-col text-center p-2 font-extralight`}><b className="font-extrabold">{aqi}</b> <span>{aqiInfo["AQIs"][aqi]}</span></div>
-                )
-              }
-            </div>
+            {
+              aqiInfo !== null && <div className='p-2 flex justify-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo["Most_Responsible_Pollutant"]}</b> dans l'air est de <b>15</b> µg/m³ </small></div>
+            }
           </div>
-          <div className="bg-slate-800 bg-opacity-40 text-md backdrop-blur-xl p-2">
+          <div className="bg-slate-800 bg-opacity-80 text-md backdrop-blur-xl p-2">
             {
               aqiInfo !== null &&
               <HoverCard withArrow width={"target"} shadow="md">
                 <HoverCard.Target>
                   <small className='line-clamp-1'>Recommandations :  {aqiInfo["Recommendation"]} </small>
                 </HoverCard.Target>
-                <HoverCard.Dropdown className='bg-slate-800 lg:bg-opacity-60 text-md backdrop-blur-xl text-white border-none'>
+                <HoverCard.Dropdown className='bg-slate-800 text-md backdrop-blur-xl text-white border-none'>
                   <small>{aqiInfo["Recommendation"]}</small>
                 </HoverCard.Dropdown>
               </HoverCard>
