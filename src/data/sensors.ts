@@ -1,7 +1,6 @@
 import fondSmart188 from "../assets/sensor188_3.jpeg"
 import fondSmart189 from "../assets/sensor189_2.jpeg"
 
-
 export default [{
   name: "SMART189",
   emplacement: "Pharmarcie Ministre",

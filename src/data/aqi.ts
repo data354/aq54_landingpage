@@ -1,3 +1,18 @@
+export interface AQIINFO {
+  Most_Responsible_Pollutant: "PM2.5" | "PM10" | "NO2" | "CO" | "O3"
+  Gravity: number
+  AQI: number
+  Recommendation: string
+}
+
+const indicators = {
+  "PM2.5": { unit: "µg/m³", label: 'PM2_5' },
+  PM10: { unit: "µg/m³", label: 'PM10' },
+  NO2: { unit: "ppb", label: 'NO2' },
+  CO: { unit: "ppm", label: 'CO' },
+  O3: { unit: "ppm", label: 'O3' }
+}
+
 const aqiRanges = {
   NO2: [
     "0 < AQI < 50 Good",
@@ -41,4 +56,4 @@ const aqiRanges = {
   ]
 }
 
-export default aqiRanges
+export default { aqiRanges, indicators }

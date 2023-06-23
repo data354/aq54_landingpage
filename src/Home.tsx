@@ -11,8 +11,8 @@ import logoDiis from "./assets/diis.png"
 import fondPoisson from "./assets/poisson.webp"
 import iconLinkedin from "./assets/linkedin.png"
 import iconGmail from "./assets/gmail.png"
-import { IconArrowDown, IconInfoCircle, IconInfoSmall, IconLoader2, IconMenu, IconPhoneCall, IconPlus, IconPointFilled, IconSend } from "@tabler/icons-react";
-import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Popover, Stack, Text, } from "@mantine/core";
+import { IconArrowDown, IconInfoCircle, IconLoader2, IconMenu, IconPhoneCall, IconPlus } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Popover, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
 import sensors from './data/sensors';
@@ -25,7 +25,9 @@ import fondSensor189_3 from "./assets/sensor189_3.jpeg"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import moment from 'moment'
-import aqiRanges from './data/aqi'
+import aqi, { AQIINFO } from './data/aqi'
+
+import _ from "lodash"
 
 export function SmoothScrolling(sectionId: string) {
   const section = document.getElementById(sectionId);
@@ -83,7 +85,9 @@ const Header = () => {
 
 const Banner = () => {
 
-  const [aqiInfo, setAqiInfo] = useState<any>(null)
+  const [aqiInfo, setAqiInfo] = useState<AQIINFO>()
+  const [sensorsValues, setSensorsValues] = useState()
+  const [sensorsValuesLength, setSensorsValuesLength] = useState<number>(1)
   const [loading, setLoading] = useState(false)
 
   function getEmoji(aqi: number) {
@@ -121,8 +125,20 @@ const Banner = () => {
       .catch(async (response) => { setLoading(false) })
   }
 
+  function getSensorsValues() {
+    setLoading(true);
+    fetch(`${import.meta.env.VITE_API_HOST}/user/stationData/byday/${moment().format("YYYY-MM-DD")}`)
+      .then(async (response) => {
+        let result = (await response.json())
+        setSensorsValues(result)
+        setSensorsValuesLength(result["SMART189"]["CO"]["data"].length)
+      })
+      .catch(async (response) => { setLoading(false) })
+  }
+
   useEffect(() => {
     getAQIs()
+    getSensorsValues()
   }, [])
 
   return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner"
@@ -150,7 +166,7 @@ const Banner = () => {
                   <Popover.Dropdown className='p-2 border-none backdrop-blur-xl'>
                     <small className='text-slate-700 block font-bold'>Definition des catégories d'AQI</small>
                     <div className="text-sm text-slate-500 flex flex-col">
-                      {aqiRanges['PM2.5'].map(range => <small>{range}</small>)}
+                      {aqi.aqiRanges['PM2.5'].map((range, index) => <small key={index}>{range}</small>)}
                     </div>
                   </Popover.Dropdown>
                 </Popover>
@@ -158,7 +174,7 @@ const Banner = () => {
             </div>
             <div className="text-gray-500 p-5 grid grid-cols-3">
               {
-                aqiInfo !== null &&
+                aqiInfo !== undefined &&
                 <>
                   <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center`}>{getCategory(aqiInfo["Gravity"])[0]}</p>
                   <div className='text-center'>
@@ -170,18 +186,18 @@ const Banner = () => {
               }
             </div>
             {
-              aqiInfo !== null && <div className='p-2 flex justify-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo["Most_Responsible_Pollutant"]}</b> dans l'air est de <b>15</b> µg/m³ </small></div>
+              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo.Most_Responsible_Pollutant}</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators[aqiInfo.Most_Responsible_Pollutant].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators[aqiInfo["Most_Responsible_Pollutant"]].unit} </small></div>
             }
           </div>
           <div className="bg-slate-800 bg-opacity-80 text-md backdrop-blur-xl p-2">
             {
-              aqiInfo !== null &&
+              !!aqiInfo &&
               <HoverCard withArrow width={"target"} shadow="md">
                 <HoverCard.Target>
-                  <small className='line-clamp-1'>Recommandations :  {aqiInfo["Recommendation"]} </small>
+                  <small className='line-clamp-1'>Recommandations :  {aqiInfo.Recommendation} </small>
                 </HoverCard.Target>
                 <HoverCard.Dropdown className='bg-slate-800 text-md backdrop-blur-xl text-white border-none'>
-                  <small>{aqiInfo["Recommendation"]}</small>
+                  <small>{aqiInfo.Recommendation}</small>
                 </HoverCard.Dropdown>
               </HoverCard>
             }
@@ -316,7 +332,7 @@ const Map = () => {
         />
         {
           sensors.map((sensor, index: number) => <Marker key={index} position={{ lat: sensor.location.lat, lng: sensor.location.lng }} icon={iconDefault}>
-            <Tooltip> <img src={sensor.picture} alt="" /> {sensor.emplacement} <br /><Text size={"xs"} color='dimmed'>{sensor.description}</Text></Tooltip>
+            <Tooltip> <img src={sensor.picture} alt="" /> {sensor.name} <br /> {sensor.emplacement} <br /><Text size={"xs"} color='dimmed'>{sensor.description}</Text></Tooltip>
           </Marker>)
         }
       </>
@@ -351,7 +367,7 @@ const Contacts = () => {
   return (
     <div id='contact' className="bg-gray-950 p-10 md:px-20 lg:px-24">
       <p className="font-extrabold text-4xl text-slate-100 text-center">Contactez-nous</p>
-      <div className='text-slate-300 space-y-3 mt-10 order-1 text-center'>
+      <div className='text-slate-300 space-y-3 mt-10 text-center'>
         <h6><b>Telephone</b> : +225 07 1008 1410</h6>
         <h6><b>Mail</b> : aq54@data354.co</h6>
         <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
