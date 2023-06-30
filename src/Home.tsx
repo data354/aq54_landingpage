@@ -1,6 +1,5 @@
 import 'leaflet/dist/leaflet.css'
 import logo from "./assets/logo.png"
-import fondPollution from "./assets/pollution.jpg"
 import logoAirqino from "./assets/airqino.png"
 import fondDechets from "./assets/dechets.jpeg"
 import fondAq54 from "./assets/aq54Page.png"
@@ -8,20 +7,17 @@ import fondTraffic from "./assets/traffic.webp"
 import fondUsine from "./assets/industrie.jpg"
 import logoMinedd from "./assets/minedd.jpg"
 import logoDiis from "./assets/diis.png"
-import fondPoisson from "./assets/poisson.webp"
 import iconLinkedin from "./assets/linkedin.png"
 import iconGmail from "./assets/gmail.png"
-import { IconArrowDown, IconInfoCircle, IconLoader2, IconMenu, IconPhoneCall, IconPlus } from "@tabler/icons-react";
-import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Popover, Text, } from "@mantine/core";
+import { IconArrowDown, IconArrowRight, IconChartHistogram, IconCodeDots, IconInfoCircle, IconLoader2, IconMenu, IconPhoneCall, IconPlus, IconTopologyStar3 } from "@tabler/icons-react";
+import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
 import sensors from './data/sensors';
 
-import fondSensor188_1 from "./assets/sensor188_1.jpeg"
 import fondSensor188_3 from "./assets/sensor188_3.jpeg"
 
 import fondSensor189_1 from "./assets/sensor189_1.jpeg"
-import fondSensor189_3 from "./assets/sensor189_3.jpeg"
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react'
 import moment from 'moment'
@@ -44,23 +40,23 @@ const Header = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  return <div id="header" className="z-50 h-20 px-5 flex items-center bg-gray-800 text-white xl:sticky xl:top-0">
+  return <div id="header" className="z-50 h-20 px-5 flex items-center bg-slate-950 text-white xl:sticky xl:top-0">
     <Grid className="w-full" align="center">
-      <Grid.Col span={3}>
-        <Flex align={"center"}>
+      <Grid.Col span={9} lg={3}>
+        <Flex align={"center"} id='headerIcon'>
           <a href="/" rel="noopener noreferrer">
             <Avatar radius={"md"} src={logo} size={"md"} alt="Data354 Logo" />
           </a>
           <span className='ml-5 font-extrabold text-2xl'>AQ54</span>
         </Flex>
       </Grid.Col>
-      <Grid.Col span={9} >
+      <Grid.Col span={3} lg={9} >
         <Flex gap={50} align={"center"} justify={"end"} className='hidden lg:flex' >
           <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500 font-bold" : ""}`}>Accueil</a>
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500 font-bold" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500 font-bold" : ""}`}>Projet AQ54</a>
           <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500">Visualisation des données</a>
-          <Button onClick={() => SmoothScrolling('contact')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
+          <Button size='lg' onClick={() => SmoothScrolling('contacts')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
         </Flex>
         <div className='flex justify-end lg:hidden'>
           <Menu shadow="md">
@@ -69,7 +65,7 @@ const Header = () => {
                 <IconMenu color='white' />
               </ActionIcon>
             </Menu.Target>
-            <Menu.Dropdown className='bg-gray-800 border-0'>
+            <Menu.Dropdown className='bg-slate-950 bg-opacity-80 backdrop-blur-md border-0'>
               <Menu.Item onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/" ? "text-red-500" : "text-white"}`} component="a" >Accueil</Menu.Item>
               <Menu.Item onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/article" ? "text-red-500" : "text-white"}`} component="a">Qualité de l'air</Menu.Item>
               <Menu.Item onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/project" ? "text-red-500" : "text-white"}`} component="a">Projet AQ54</Menu.Item>
@@ -141,42 +137,42 @@ const Banner = () => {
     getSensorsValues()
   }, [])
 
-  return <div style={{ backgroundImage: `url("${fondPollution}")` }} id="banner"
-    className="bg-cover bg-blend-multiply bg-slate-800 bg-opacity-40 p-10 md:p-20 lg:p-24">
+  return <div id="banner"
+    className="bg-cover bg-slate-950 p-10 md:p-20 lg:p-36 lg:min-h-screen">
     <div className='text-white grid gap-5 grid-cols-2 lg:gap-20 xl:grid-cols-4'>
-      <div className='col-span-2 '>
+      <div id='infoTitle' className='col-span-2 '>
         <h2 className='text-4xl font-bold md:text-6xl lg:text-7xl'>L'Open data contre la pollution de l'air</h2>
-        <p className='text-xl text-white lg:text-3xl mt-5 text-justify md:mt-10 font-extralight'>
+        <p className='text-xl text-white lg:text-3xl my-5 lg:my-20 text-justify md:mt-10 font-extralight'>
           La pollution de l’air est un enjeu de premier rang pour la santé publique,
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
         </p>
-        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconArrowDown />} radius={0} className="btn-primary" mt={30}>En savoir plus</Button>
+        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconArrowDown />} radius={0} size='lg' className="btn-primary" mt={30}>En savoir plus</Button>
       </div>
-      <div id='infoPopup' className='col-span-2 md:col-span-1 md:max-xl:col-start-2 xl:col-span-2'>
+      <div id='infoPopup' className='col-span-2 md:col-span-1 md:max-xl:col-start-2 xl:col-span-2 xl:-mb-96 xl:-mt-96'>
         <div className="sticky top-36 xl:max-w-md mx-auto">
-          <div className='shadow-2xl bg-slate-900 bg-opacity-20 backdrop-blur border border-slate-900 border-opacity-10'>
+          <div className='shadow-2xl bg-slate-950 bg-opacity-70 backdrop-blur border border-slate-900 border-opacity-10'>
             <div className="flex items-center justify-center">
-              <p className='text-slate-100 p-3 font-extralight flex-1'>Qualité de l'air à Abidjan</p>
+              <p className='text-slate-100 p-3 font-extralight flex-1'>Qualité de l'air à <b className='font-extrabold'>Abidjan</b></p>
               {
-                loading ? <IconLoader2 className='animate-spin opacity-60 mx-5' /> : aqiInfo !== null && <Popover position="right" withArrow shadow="md">
-                  <Popover.Target>
-                    <IconInfoCircle className='mx-5 opacity-80 cursor-pointer' />
-                  </Popover.Target>
-                  <Popover.Dropdown className='p-2 border-none backdrop-blur-xl'>
+                loading ? <IconLoader2 className='animate-spin opacity-60 mx-5' /> : aqiInfo !== null && <HoverCard position="right" withArrow shadow="md">
+                  <HoverCard.Target>
+                    <IconInfoCircle className='mx-5 opacity-80' />
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown className='p-2 border-none backdrop-blur-xl'>
                     <small className='text-slate-700 block font-bold'>Definition des catégories d'AQI</small>
                     <div className="text-sm text-slate-500 flex flex-col">
                       {aqi.aqiRanges['PM2.5'].map((range, index) => <small key={index}>{range}</small>)}
                     </div>
-                  </Popover.Dropdown>
-                </Popover>
+                  </HoverCard.Dropdown>
+                </HoverCard>
               }
             </div>
             <div className="text-gray-500 p-5 grid grid-cols-3">
               {
                 aqiInfo !== undefined &&
                 <>
-                  <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center`}>{getCategory(aqiInfo["Gravity"])[0]}</p>
+                  <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center font-extrabold`}>{getCategory(aqiInfo["Gravity"])[0]}</p>
                   <div className='text-center'>
                     <h2 className='text-slate-200 text-5xl font-bold'>{aqiInfo.AQI}</h2>
                     <h6 className='text-slate-200 text-xs'>{aqiInfo["Most_Responsible_Pollutant"]} AQI</h6>
@@ -186,17 +182,17 @@ const Banner = () => {
               }
             </div>
             {
-              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo.Most_Responsible_Pollutant}</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators[aqiInfo.Most_Responsible_Pollutant].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators[aqiInfo["Most_Responsible_Pollutant"]].unit} </small></div>
+              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center text-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo.Most_Responsible_Pollutant}</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators[aqiInfo.Most_Responsible_Pollutant].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators[aqiInfo["Most_Responsible_Pollutant"]].unit} </small></div>
             }
           </div>
-          <div className="bg-slate-800 bg-opacity-80 text-md backdrop-blur-xl p-2">
+          <div className="bg-slate-950 bg-opacity-80 text-md backdrop-blur-xl p-2">
             {
               !!aqiInfo &&
               <HoverCard withArrow width={"target"} shadow="md">
                 <HoverCard.Target>
                   <small className='line-clamp-1'>Recommandations :  {aqiInfo.Recommendation} </small>
                 </HoverCard.Target>
-                <HoverCard.Dropdown className='bg-slate-800 text-md backdrop-blur-xl text-white border-none'>
+                <HoverCard.Dropdown className='bg-slate-950 bg-opacity-80 text-md backdrop-blur-xl text-white border-none'>
                   <small>{aqiInfo.Recommendation}</small>
                 </HoverCard.Dropdown>
               </HoverCard>
@@ -204,107 +200,119 @@ const Banner = () => {
           </div>
         </div>
       </div>
+      <div id='bannerBottom' className="p-5 col-span-2"></div>
     </div>
   </div>
 }
 
 const PollutioDescription = () => {
   const navigate = useNavigate()
-  return <div id="pollutionDescription">
-    <h2 className='text-slate-500'>La qualité de l'air</h2>
-    <p className='text-slate-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
-    <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
-      <p>
-        Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
-        <a onClick={() => navigate("/article")} className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
-      </p>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 xl:col-span-2 xl:gap-0 group-hover:scale-125">
-        <div style={{ backgroundImage: `url("${fondUsine}")` }}
-          className='h-44 lg:h-80 xl:h-96  bg-cover grayscale-[70%]'>
-          <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
-            <p className='
-          text-white p-2 
-          text-lg -tracking-tighter text-center font-extralight' >Industrie</p>
-          </div>
-        </div>
-        <div style={{ backgroundImage: `url("${fondDechets}")` }}
-          className={`h-44 lg:h-80 xl:h-96 w-full bg-cover grayscale-[70%]`}>
-          <div className="h-full flex justify-center items-end bg-gradient-to-t from-zinc-500 from-5% to-transparent">
-            <p className='
-          text-white p-2 
-          text-lg -tracking-tighter text-center font-extralight' >Incinération de déchets</p>
-          </div>
-        </div>
-        <div style={{ backgroundImage: `url("${fondTraffic}")` }}
-          className='h-44 lg:h-80 xl:h-96 w-full bg-cover picture-animated'>
-          <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
-            <p className='
+  return <div id="pollutionDescription" className='p-10'>
+    <div className="lg:py-20 max-w-7xl mx-auto">
+      <h2 className='text-slate-700'>La qualité de l'air</h2>
+      <p className='text-slate-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
+      <div className="lg:mt-20 grid xl:grid-cols-3 gap-5 lg:gap-10">
+        <p>
+          Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
+          <a onClick={() => navigate("/article")} className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
+        </p>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:col-span-2 xl:gap-0">
+          <div style={{ backgroundImage: `url("${fondTraffic}")` }}
+            className='h-44 lg:h-80 xl:h-96 w-full bg-cover'>
+            <div className="h-full flex justify-center items-end bg-gradient-to-t from-slate-500 from-5% to-transparent">
+              <p className='
           text-white p-2 
           text-lg -tracking-tighter text-center font-extralight' >Trafic</p>
+            </div>
           </div>
-        </div>
-        <div style={{ backgroundImage: `url("${fondPoisson}")` }}
-          className='h-44 lg:h-80 xl:h-96 w-full bg-cover grayscale-[70%]'>
-          <div className="h-full flex justify-center items-end bg-gradient-to-t from-zinc-500 from-5% to-transparent">
-            <p className='
+          <div style={{ backgroundImage: `url("${fondUsine}")` }}
+            className='h-44 lg:h-80 xl:h-96  bg-cover picture-animated drop-shadow-2xl '>
+            {/* <p className=' text-white p-2 text-lg -tracking-tighter text-center font-extralight' >Trafic</p> */}
+          </div>
+          <div style={{ backgroundImage: `url("${fondDechets}")` }}
+            className={`h-44 lg:h-80 xl:h-96 w-full bg-cover`}>
+            <div className="h-full flex justify-center items-end bg-gradient-to-t from-zinc-500 from-5% to-transparent">
+              <p className='
           text-white p-2 
-          text-lg -tracking-tighter text-center font-extralight' >Cuisson traditionnelle</p>
+          text-lg -tracking-tighter text-center font-extralight' >Incinération de déchets</p>
+            </div>
           </div>
+          <p className='text-center text-md mt-5 col-span-full'>Sources urbaines de pollution de l'air </p>
         </div>
-        <p className='text-center text-md mt-5 col-span-full'>Sources urbaines de pollution de l'air </p>
       </div>
     </div>
   </div>
 }
 
 const Projects = () => {
-  const navigate = useNavigate()
-  return <div id="projects">
-    <h2 className='text-red-700'>Le projet AQ54</h2>
-    <p className='text-slate-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
-    <div className="mt-5 grid xl:grid-cols-3 gap-5 lg:gap-10">
-      <div className='text-justify xl:order-2'>
-        <p className='text-lg text-slate-600 font-bold sm:text-3xl'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
-        <ul className='list-decimal list-inside space-y-5 text-gray-500 sm:text-xl mt-10'>
-          <li>Doter Abidjan d’un <b>réseau de capteurs</b> suffisant pour obtenir une <b>cartographie de la qualité de l’air</b> en temps réel,</li>
-          <li><b>Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne,</li>
-          <li>Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b> aux <b>décideurs, scientifiques, entreprises, organisations</b> et aux <b>citoyens</b>.</li>
-        </ul>
+  return <div id="projects" className='bg-zinc-100 p-10 md:p-28 md:py-20 md:mb-80'>
+    <div className='max-w-7xl mx-auto'>
+      <h2 className='text-red-600'>Le projet AQ54</h2>
+      <p className='text-slate-500 lg:text-2xl sm:text-xl'>Une ambition globale</p>
+      <p className='text-lg text-slate-600 font-extralight sm:text-3xl text-center my-10'>Pour accélerer la lutte contre la pollution de l’air, le projet vise à :</p>
+      <div className="grid grid-cols-1 md:grid-cols-3 mt-10 gap-7">
+        <div className='bg-white p-8 flex flex-col items-center space-y-5'>
+          <IconTopologyStar3 size={80} className='text-zinc-400' />
+          <p className='text-center'> Doter Abidjan d’un <b>réseau de capteurs</b> afin de <b>cartographier la qualité de l’air</b> en temps réel.</p></div>
+        <div className='bg-white p-8  flex flex-col items-center space-y-5'>
+          <IconCodeDots size={80} className='text-red-400' />
+          <p className='text-center'><b> Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne.</p></div>
+        <div className='bg-white p-8  flex flex-col items-center space-y-5'>
+          <IconChartHistogram size={80} className='text-red-400' />
+          <p className='text-center'> Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b>.</p></div>
       </div>
-      <img className='xl:col-span-2 xl:order-1 xl:p-10' src={fondAq54} />
-    </div>
-
-    <p className='my-20 text-center text-4xl opacity-40 text-gray- leading-10'><b className='font-bold'>Agir sans attendre</b> : Lancement de notre projet pilote</p>
-
-    <div className='mt-10 grid gap-5 xl:grid-cols-3 lg:gap-10'>
-      <div className='text-justify'>
-        <p className='text-lg text-slate-600 font-bold sm:text-3xl'>Pour initier le projet, Data354 a lancé sa <b>phase pilote</b> consistant en:</p>
-        <ul className='list-decimal list-inside mt-10 space-y-5 text-gray-500 sm:text-xl'>
-          <li><b>L’installation</b> de deux premiers capteurs en ville et une <b>période de récolte</b> de données,</li>
-          <li>Le développement et tests de la <b>plateforme de visualisation</b>,</li>
-          <li>L’étude sur <b>l’impact du bitumage</b> de route sur la qualité de l’air.</li>
-        </ul>
-      </div>
-      <div className='grid sm:grid-cols-2 sm:col-span-2 xl:grid-cols-2 lg:gap-x-5 lg:p-20'>
-        <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
-          className='order-1 h-44 lg:h-80 w-full bg-center bg-cover'>
-        </div>
-        <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
-          className='order-3 sm:order-2 h-44 lg:h-80 w-full bg-cover bg-center'>
-        </div>
-        <div style={{ backgroundImage: `url("${fondSensor188_1}")` }} className='order-2 sm:order-3 h-44 lg:h-80 w-full bg-cover bg-center flex justify-end items-end'>
-          <p className='text-white p-2' >Pharmacie du bonheur</p>
-        </div>
-        <div style={{ backgroundImage: `url("${fondSensor189_3}")` }} className='order-4 h-44 lg:h-80 w-full bg-cover bg-center  flex justify-end items-end'>
-          <p color='white' className='text-white p-2' >Pharmacie rue ministre</p>
-        </div>
-      </div>
-    </div>
-
-    <div className='flex items-center justify-center'>
-      <Button onClick={() => { navigate("/project") }} rightIcon={<IconPlus />} radius={0} className="btn-primary" mt={30}>En savoir plus sur le projet</Button>
+      <img className='mt-10 md:-mb-96 drop-shadow-lg' src={fondAq54} />
     </div>
   </div>
+}
+
+const Installations = () => {
+  return (
+    <div className='p-10'>
+      <div className='flex items-center justify-center'>
+        <a className='text-red-500 hover:text-red-600 text-xl' href="http://aq54.visualisation.data354.com" target="_blank" rel="noopener noreferrer">Acceder à la plateforme de visualisation <IconArrowRight className='inline' /></a>
+      </div>
+      <div className="max-w-screen-xl mx-auto">
+        <p className='my-20 text-6xl font-[1000] text-center text-zinc-400'>Agir sans attendre : Lancement de notre projet pilote</p>
+        <p className='text-lg text-zinc-500 font-bold sm:text-4xl my-10 text-center '>Nos installations</p>
+        <div className='mt-14 grid grid-cols-1 md:grid-cols-2 gap-20'>
+          <div className='space-y-6'>
+            <p className=''>Le capteur <b className='text-red-500'>SMART188</b> installé à la pharmacie du bonheur près d'une rue bituméé.</p>
+            <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
+              className='h-80 lg:h-96 bg-center bg-cover'>
+            </div>
+          </div>
+          <div className="space-y-6">
+            <p className=''>Le capteur <b className='text-red-500'>SMART189</b> installé à la pharmacie Ministre près d'une rue non bituméé.</p>
+            <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
+              className='h-80 lg:h-96 bg-cover bg-center'>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const Partenaires = () => {
+  return (
+    <div id='partners' className='p-10 py-20'>
+      <div className="mx-auto max-w-7xl">
+        <p className='text-lg text-zinc-500 font-bold sm:text-4xl text-center'>Nos partenaires</p>
+        <div className='flex justify-center space-x-20 mt-20'>
+          <a className='md:col-start-2 self-center' href="https://environnement.gouv.ci/directions-centrales/ " target="_blank" rel="noopener noreferrer">
+            <img className='h-20 xl:h-28' src={logoMinedd} alt="" />
+          </a>
+          <a className='self-center' href="https://www.airqino.it/en/" target="_blank" rel="noopener noreferrer">
+            <img className='h-20 xl:h-28' src={logoAirqino} alt="" />
+          </a>
+          <a className='self-center' href="https://www.snisdiis.com/" target="_blank" rel="noopener noreferrer">
+            <img className='h-20 xl:h-28' src={logoDiis} alt="" />
+          </a>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const Map = () => {
@@ -339,35 +347,16 @@ const Map = () => {
     )
   }
 
-  return <MapContainer className='h-96 p-0' zoom={mapZoom} center={mapCenter} scrollWheelZoom={false}>
+  return <MapContainer className='h-[55vh] p-0' zoom={mapZoom} center={mapCenter} scrollWheelZoom={false}>
     <MapComponent />
   </MapContainer>
 }
 
-const Partenaires = () => {
-  return (
-    <div id='partners'>
-      <p className='text-3xl opacity-40 font-extralight text-center'>Nos partenaires</p>
-      <div className='grid grid-cols-3 mt-10 gap-20 md:grid-cols-5 place-content-center'>
-        <a className='md:col-start-2 self-center' href="https://environnement.gouv.ci/directions-centrales/ " target="_blank" rel="noopener noreferrer">
-          <img src={logoMinedd} alt="" />
-        </a>
-        <a className='self-center' href="https://www.airqino.it/en/" target="_blank" rel="noopener noreferrer">
-          <img src={logoAirqino} alt="" />
-        </a>
-        <a className='self-center' href="https://www.snisdiis.com/" target="_blank" rel="noopener noreferrer">
-          <img src={logoDiis} alt="" />
-        </a>
-      </div>
-    </div>
-  )
-}
-
 const Contacts = () => {
   return (
-    <div id='contact' className="bg-gray-950 p-10 md:px-20 lg:px-24">
+    <div id='contacts' className="bg-gray-950 p-10 md:px-20 lg:px-24">
       <p className="font-extrabold text-4xl text-slate-100 text-center">Contactez-nous</p>
-      <div className='text-slate-300 space-y-3 mt-10 text-center'>
+      <div className='text-slate-100 space-y-3 mt-10 text-center'>
         <h6><b>Telephone</b> : +225 07 1008 1410</h6>
         <h6><b>Mail</b> : aq54@data354.co</h6>
         <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
@@ -384,24 +373,23 @@ const Contacts = () => {
 
 const AppFooter = () => {
   return (
-    <div className="bg-slate-800 p-2 flex justify-center">
+    <div className="bg-slate-950 p-2 flex justify-center">
       <small className='text-white text-center sm:text-sm'> {`Designed & built by Data354, 2023 CIV 🇨🇮`} - {`All rights reserved`}</small>
     </div>
   );
 };
 
 export const Home = () => {
-  useEffect(() => {
-    SmoothScrolling("header")
-  }, [])
+  // useEffect(() => {
+  //   SmoothScrolling("root")
+  // }, [])
   return (
     <>
       <Banner />
-      <div id='info' className='py-10 md:py-20 px-5 space-y-20 md:px-20 lg:p-32 mx-auto'>
-        <PollutioDescription />
-        <Projects />
-        <Partenaires />
-      </div>
+      <PollutioDescription />
+      <Projects />
+      <Installations />
+      <Partenaires />
       <Map />
     </>
   )

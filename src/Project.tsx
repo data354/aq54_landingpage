@@ -3,7 +3,7 @@ import { SmoothScrolling } from "./Home"
 
 export default function Project() {
   useEffect(() => {
-    SmoothScrolling("projectDetails")
+    SmoothScrolling("root")
   }, [])
   return (<div id="projectDetails">
     <section className="py-10 md:py-20 lg:p-32">

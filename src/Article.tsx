@@ -1,10 +1,9 @@
-import { IconAlertCircle } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { SmoothScrolling } from "./Home";
 
 export default function Article() {
   useEffect(() => {
-    SmoothScrolling("article")
+    SmoothScrolling("root")
   }, [])
   return (<div id="article">
     <section className="py-10 md:py-20 lg:p-32">
@@ -14,7 +13,6 @@ export default function Article() {
             Comprendre la qualité de l'air
           </h2>
           <div className="p-3 bg-stone-100 my-5 flex items-center sm:space-x-5">
-            {/* <IconAlertCircle className="text-red-800 hidden sm:block" /> */}
             <p> Un de nos objectif est notamment de faire en sorte que plus de personnes prennent conscience
               des enjeux liés à la pollution de l'air. Cette page informative réunit les informations basiques
               pour comprendre de quoi il s'agit.
