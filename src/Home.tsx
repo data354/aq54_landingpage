@@ -380,9 +380,9 @@ const AppFooter = () => {
 };
 
 export const Home = () => {
-  // useEffect(() => {
-  //   SmoothScrolling("root")
-  // }, [])
+  useEffect(() => {
+    SmoothScrolling("root")
+  }, [])
   return (
     <>
       <Banner />
