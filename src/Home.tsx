@@ -9,7 +9,7 @@ import logoMinedd from "./assets/minedd.jpg"
 import logoDiis from "./assets/diis.png"
 import iconLinkedin from "./assets/linkedin.png"
 import iconGmail from "./assets/gmail.png"
-import { IconArrowDown, IconArrowRight, IconChartHistogram, IconCodeDots, IconLoader2, IconMenu, IconPhoneCall, IconTopologyStar3 } from "@tabler/icons-react";
+import { IconArrowDown, IconArrowRight, IconChartHistogram, IconCodeDots, IconExternalLink, IconLoader2, IconMenu, IconPhoneCall, IconTopologyStar3 } from "@tabler/icons-react";
 import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
@@ -56,7 +56,7 @@ const Header = () => {
           <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500 font-bold" : ""}`}>Accueil</a>
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500 font-bold" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500 font-bold" : ""}`}>Projet AQ54</a>
-          <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500">Visualisation des données</a>
+          <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500 flex">Visualisation des données <IconExternalLink className='ml-2' /></a>
           <Button size='lg' onClick={() => SmoothScrolling('contacts')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
         </Flex>
         <div className='flex justify-end lg:hidden'>
@@ -124,7 +124,7 @@ const Banner = () => {
           le climat et la société. Aujourd’hui, il y a un manque cruel de données ouvertes
           sur la qualité de l’air en Côte d’Ivoire.
         </p>
-        <Button onClick={() => SmoothScrolling('info')} rightIcon={<IconArrowDown />} radius={0} size='lg' className="btn-primary" mt={30}>En savoir plus</Button>
+        <Button onClick={() => SmoothScrolling('pollutionDescription')} rightIcon={<IconArrowDown />} radius={0} size='lg' className="btn-primary" mt={30}>En savoir plus</Button>
       </div>
       <div id='infoPopup' className='col-span-2 md:col-span-1 md:max-xl:col-start-2 xl:col-span-2 xl:-mb-96 xl:-mt-96'>
         <div className="sticky top-36 xl:max-w-md mx-auto">
@@ -158,12 +158,12 @@ const Banner = () => {
                     arc={{
                       colorArray: ['green', 'yellow', 'orange', 'red', 'purple', 'maroon'],
                       subArcs: [
-                        { limit: 50, tooltip: { text: "Good" } },
-                        { limit: 100, tooltip: { text: "Moderate" } },
-                        { limit: 150, tooltip: { text: "Unhealthy for sensitive groups" } },
-                        { limit: 200, tooltip: { text: "Unhealthy" } },
-                        { limit: 300, tooltip: { text: "Very Unhealthy" } },
-                        { limit: 500, tooltip: { text: "Harzardous" } }
+                        { limit: 50, tooltip: { text: "Bon" } },
+                        { limit: 100, tooltip: { text: "Moderée" } },
+                        { limit: 150, tooltip: { text: "Mauvais pour la santé des groupes sensibles" } },
+                        { limit: 200, tooltip: { text: "Mauvais pour la santé" } },
+                        { limit: 300, tooltip: { text: "Très mauvais pour la santé" } },
+                        { limit: 500, tooltip: { text: "Dangereux" } }
                       ],
                       padding: 0.05,
                       width: 0.05,
@@ -210,7 +210,7 @@ const PollutioDescription = () => {
       <p className='text-slate-500 lg:text-2xl sm:text-xl'>Un enjeu majeur</p>
       <div className="lg:mt-20 grid xl:grid-cols-3 gap-5 lg:gap-10">
         <p>
-          Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures. Pourtant, peu de mesures sont mises en place, et le sujet reste méconnu...
+          Selon l’OMS, plus de 9 personnes sur 10 sur Terre respirent un air de mauvaise qualité. C’est particulièrement le cas dans les zones urbaines comme Abidjan, qui concentrent de nombreuses différentes sources émettrices de polluants. La pollution de l’air constitue en Côte d’Ivoire le deuxième facteur de risque de mortalité après la malnutrition. C’est également un grand enjeu climatique puisque les polluants atmosphériques à courte durée de vie accélèrent localement la hausse des températures.
           <a onClick={() => navigate("/article")} className='text-blue-500 hover:text-blue-600 cursor-pointer'>En savoir plus </a>
         </p>
         <div className="grid sm:grid-cols-2 md:grid-cols-3 xl:col-span-2 xl:gap-0">
