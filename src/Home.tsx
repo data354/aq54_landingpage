@@ -9,7 +9,7 @@ import logoMinedd from "./assets/minedd.jpg"
 import logoDiis from "./assets/diis.png"
 import iconLinkedin from "./assets/linkedin.png"
 import iconGmail from "./assets/gmail.png"
-import { IconArrowDown, IconArrowRight, IconChartHistogram, IconCodeDots, IconInfoCircle, IconLoader2, IconMenu, IconPhoneCall, IconPlus, IconTopologyStar3 } from "@tabler/icons-react";
+import { IconArrowDown, IconArrowRight, IconChartHistogram, IconCodeDots, IconLoader2, IconMenu, IconPhoneCall, IconTopologyStar3 } from "@tabler/icons-react";
 import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
@@ -24,6 +24,7 @@ import moment from 'moment'
 import aqi, { AQIINFO } from './data/aqi'
 
 import _ from "lodash"
+import GaugeComponent from 'react-gauge-component'
 
 export function SmoothScrolling(sectionId: string) {
   const section = document.getElementById(sectionId);
@@ -86,30 +87,6 @@ const Banner = () => {
   const [sensorsValuesLength, setSensorsValuesLength] = useState<number>(1)
   const [loading, setLoading] = useState(false)
 
-  function getEmoji(aqi: number) {
-    switch (aqi) {
-      case 1: return "😊"
-      case 2: return "😶";
-      case 3: return "😟";
-      case 4:
-      case 5: return "😷";
-      case 6: return "🥵";
-    }
-  }
-
-  function getCategory(aqi: number): [string, string] {
-    switch (aqi) {
-      case 1: return ["Good", "green"]
-      case 2: return ["Moderate", "yellow"];
-      case 3: return ["Unhealthy for sensitive", "orange"];
-      case 4: return ["Unhealthy", "red"];
-      case 5: return ["Very Unhealthy", "red"];
-      case 6: return ["Harzardous", "red"];
-    }
-
-    return ["", ""]
-  }
-
   function getAQIs() {
     setLoading(true);
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationAQI/byday/SMART189/${moment().format("YYYY-MM-DD")}`)
@@ -153,31 +130,51 @@ const Banner = () => {
         <div className="sticky top-36 xl:max-w-md mx-auto">
           <div className='shadow-2xl bg-slate-950 bg-opacity-70 backdrop-blur border border-slate-900 border-opacity-10'>
             <div className="flex items-center justify-center">
-              <p className='text-slate-100 p-3 font-extralight flex-1'>Qualité de l'air à <b className='font-extrabold'>Abidjan</b></p>
+              <p className='text-slate-100 p-3 text-center font-extralight flex-1'>Qualité de l'air à <b className='font-extrabold'>Abidjan</b></p>
               {
-                loading ? <IconLoader2 className='animate-spin opacity-60 mx-5' /> : aqiInfo !== null && <HoverCard position="right" withArrow shadow="md">
-                  <HoverCard.Target>
-                    <IconInfoCircle className='mx-5 opacity-80' />
-                  </HoverCard.Target>
-                  <HoverCard.Dropdown className='p-2 border-none backdrop-blur-xl'>
-                    <small className='text-slate-700 block font-bold'>Definition des catégories d'AQI</small>
-                    <div className="text-sm text-slate-500 flex flex-col">
-                      {aqi.aqiRanges['PM2.5'].map((range, index) => <small key={index}>{range}</small>)}
-                    </div>
-                  </HoverCard.Dropdown>
-                </HoverCard>
+                loading && <IconLoader2 className='animate-spin opacity-60 mx-5' />
               }
             </div>
-            <div className="text-gray-500 p-5 grid grid-cols-3">
+            <div className="text-gray-500 p-5 ">
               {
                 aqiInfo !== undefined &&
                 <>
-                  <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center font-extrabold`}>{getCategory(aqiInfo["Gravity"])[0]}</p>
-                  <div className='text-center'>
-                    <h2 className='text-slate-200 text-5xl font-bold'>{aqiInfo.AQI}</h2>
-                    <h6 className='text-slate-200 text-xs'>{aqiInfo["Most_Responsible_Pollutant"]} AQI</h6>
-                  </div>
-                  <span className='text-4xl text-center self-center'>{getEmoji(Number(aqiInfo["Gravity"]))}</span>
+                  <GaugeComponent
+                    value={aqiInfo.AQI} maxValue={500} minValue={0} id="gauge-component1"
+                    type="radial"
+                    labels={{
+                      markLabel: {
+                        type: "inner",
+                        marks: [
+                          { value: 50 },
+                          { value: 100 },
+                          { value: 150 },
+                          { value: 200 },
+                          { value: 300 },
+                          { value: 500 }
+                        ]
+                      }
+                    }}
+                    arc={{
+                      colorArray: ['green', 'yellow', 'orange', 'red', 'purple', 'maroon'],
+                      subArcs: [
+                        { limit: 50, tooltip: { text: "Good" } },
+                        { limit: 100, tooltip: { text: "Moderate" } },
+                        { limit: 150, tooltip: { text: "Unhealthy for sensitive groups" } },
+                        { limit: 200, tooltip: { text: "Unhealthy" } },
+                        { limit: 300, tooltip: { text: "Very Unhealthy" } },
+                        { limit: 500, tooltip: { text: "Harzardous" } }
+                      ],
+                      padding: 0.05,
+                      width: 0.05,
+                    }}
+                    pointer={{
+                      elastic: true,
+                      animationDelay: 0
+                    }}
+                  />
+                  {/* <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center font-extrabold`}>{getCategory(aqiInfo["Gravity"])[0]}</p> */}
+                  {/* <span className='text-4xl text-center self-center'>{getEmoji(Number(aqiInfo["Gravity"]))}</span> */}
                 </>
               }
             </div>
@@ -267,6 +264,7 @@ const Projects = () => {
 }
 
 const Installations = () => {
+  const navigate = useNavigate()
   return (
     <div className='p-10'>
       <div className='flex items-center justify-center'>
@@ -289,6 +287,9 @@ const Installations = () => {
             </div>
           </div>
         </div>
+        <div className="mt-20 flex justify-center">
+          <Button onClick={() => navigate("/project")} className='btn-primary' rightIcon={<IconArrowRight />} size='lg'>En savoir plus sur le projet </Button>
+        </div>
       </div>
     </div>
   )
@@ -309,6 +310,8 @@ const Partenaires = () => {
           <a className='self-center' href="https://www.snisdiis.com/" target="_blank" rel="noopener noreferrer">
             <img className='h-20 xl:h-28' src={logoDiis} alt="" />
           </a>
+        </div>
+        <div className='flex items-center justify-center'>
         </div>
       </div>
     </div>
