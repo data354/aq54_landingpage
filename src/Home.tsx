@@ -10,7 +10,7 @@ import logoDiis from "./assets/diis.png"
 import iconLinkedin from "./assets/linkedin.png"
 import iconGmail from "./assets/gmail.png"
 import { IconArrowDown, IconArrowRight, IconChartHistogram, IconCodeDots, IconExternalLink, IconLoader2, IconMenu, IconPhoneCall, IconTopologyStar3 } from "@tabler/icons-react";
-import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Menu, Text, } from "@mantine/core";
+import { ActionIcon, Avatar, Button, Flex, Grid, HoverCard, Loader, Menu, Text, } from "@mantine/core";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { icon } from 'leaflet';
 import sensors from './data/sensors';
@@ -56,7 +56,7 @@ const Header = () => {
           <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500 font-bold" : ""}`}>Accueil</a>
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500 font-bold" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500 font-bold" : ""}`}>Projet AQ54</a>
-          <a href='https://aq54.visualisation.data354.com/' target='blank' className="hover:text-red-500 flex">Visualisation des données <IconExternalLink className='ml-2' /></a>
+          <a href='https://viz.aq54.data354.com/' target='blank' className="hover:text-red-500 flex">Visualisation des données <IconExternalLink className='ml-2' /></a>
           <Button size='lg' onClick={() => SmoothScrolling('contacts')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
         </Flex>
         <div className='flex justify-end lg:hidden'>
@@ -98,6 +98,19 @@ const Banner = () => {
       .catch(async (response) => { setLoading(false) })
   }
 
+  function getCategory(aqi: number): string {
+    switch (aqi) {
+      case 1: return "Bon"
+      case 2: return "Modéré"
+      case 3: return "Mauvais pour la santé des personnes sensibles"
+      case 4: return "Mauvais pour la santé"
+      case 5: return "Tres Mauvais pour la santé"
+      case 6: return "Dangereux";
+    }
+
+    return ""
+  }
+
   function getSensorsValues() {
     setLoading(true);
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationData/byday/${moment().format("YYYY-MM-DD")}`)
@@ -131,13 +144,11 @@ const Banner = () => {
           <div className='shadow-2xl bg-slate-950 bg-opacity-70 backdrop-blur border border-slate-900 border-opacity-10'>
             <div className="flex items-center justify-center">
               <p className='text-slate-100 p-3 text-center font-extralight flex-1'>Qualité de l'air à <b className='font-extrabold'>Abidjan</b></p>
-              {
-                loading && <IconLoader2 className='animate-spin opacity-60 mx-5' />
-              }
+              {loading && <Loader variant='dots' />}
             </div>
-            <div className="text-gray-500 p-5 ">
+            <div className="p-5 ">
               {
-                aqiInfo !== undefined &&
+                !!aqiInfo &&
                 <>
                   <GaugeComponent
                     value={aqiInfo.AQI} maxValue={500} minValue={0} id="gauge-component1"
@@ -173,8 +184,7 @@ const Banner = () => {
                       animationDelay: 0
                     }}
                   />
-                  {/* <p style={{ color: getCategory(aqiInfo["Gravity"])[1] }} className={`text-sm lg:text-xl self-center text-center font-extrabold`}>{getCategory(aqiInfo["Gravity"])[0]}</p> */}
-                  {/* <span className='text-4xl text-center self-center'>{getEmoji(Number(aqiInfo["Gravity"]))}</span> */}
+                  <p className="text-center text-gray-300">{getCategory(aqiInfo.Gravity)}</p>
                 </>
               }
             </div>
@@ -268,7 +278,7 @@ const Installations = () => {
   return (
     <div className='p-10'>
       <div className='flex items-center justify-center'>
-        <a className='text-red-500 hover:text-red-600 text-xl' href="http://aq54.visualisation.data354.com" target="_blank" rel="noopener noreferrer">Acceder à la plateforme de visualisation <IconArrowRight className='inline' /></a>
+        <a className='text-red-500 hover:text-red-600 text-xl' href="http://viz.aq54.data354.com" target="_blank" rel="noopener noreferrer">Acceder à la plateforme de visualisation <IconArrowRight className='inline' /></a>
       </div>
       <div className="max-w-screen-xl mx-auto">
         <p className='my-20 text-6xl font-[1000] text-center text-zinc-400'>Agir sans attendre : Lancement de notre projet pilote</p>
