@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 
-import Root from "./Home";
-import { Home } from "./Home";
-import Project from "./Project";
-import Article from "./Article";
+import Root from "./pages/Home";
+import Home from "./pages/Home";
+import Project from "./pages/Project";
+import Article from "./pages/Article";
 
 export default function App() {
   return (
