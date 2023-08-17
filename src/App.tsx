@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 
-import Root from "./pages/Home";
+import Root from "./pages/Index";
 import Home from "./pages/Home";
 import Project from "./pages/Project";
 import Article from "./pages/Article";

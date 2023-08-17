@@ -1,9 +1,10 @@
-import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet"
+import { MapContainer, Marker, Polygon, Polyline, TileLayer, Tooltip } from "react-leaflet"
 import sensors from "../data/sensors"
 import { icon } from "leaflet"
 import { Text } from "@mantine/core"
+import prediction from "../data/predictions.json"
 
-export default function Map(){
+export default function Map() {
 
   let mapZoom: number = 11
   let mapCenter: [number, number] = [5.37, -4]
@@ -23,14 +24,11 @@ export default function Map(){
 
     return (
       <>
-        <TileLayer
-          url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-        />
-        {
-          sensors.map((sensor, index: number) => <Marker key={index} position={{ lat: sensor.location.lat, lng: sensor.location.lng }} icon={iconDefault}>
-            <Tooltip> <img src={sensor.picture} alt="" /> {sensor.name} <br /> {sensor.emplacement} <br /><Text size={"xs"} color='dimmed'>{sensor.description}</Text></Tooltip>
-          </Marker>)
-        }
+        <TileLayer url='https://tile.openstreetmap.org/{z}/{x}/{y}.png' />
+        {sensors.map((sensor, index: number) => <Marker key={index} position={{ lat: sensor.location.lat, lng: sensor.location.lng }} icon={iconDefault}>
+          <Tooltip> <img src={sensor.picture} alt="" /> {sensor.name} <br /> {sensor.emplacement} <br /><Text size={"xs"} color='dimmed'>{sensor.description}</Text></Tooltip>
+        </Marker>)}
+        {prediction.map((pred, index) => <Polygon pathOptions={{ color: "red" }} key={index} stroke color="red" positions={JSON.parse(pred.polygon)} />)}
       </>
     )
   }

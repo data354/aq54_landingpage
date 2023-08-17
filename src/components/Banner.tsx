@@ -67,7 +67,7 @@ export default function Banner(){
       </div>
       <div id='infoPopup' className='col-span-2 md:col-span-1 md:max-xl:col-start-2 xl:col-span-2 xl:-mb-96 xl:-mt-96'>
         <div className="sticky top-36 xl:max-w-md mx-auto">
-          <div className='shadow-2xl bg-slate-950 bg-opacity-70 backdrop-blur border border-slate-900 border-opacity-10'>
+          <div className='shadow-2xl bg-slate-950 bg-opacity-80 backdrop-blur border border-slate-900 border-opacity-10'>
             <div className="flex items-center justify-center">
               <p className='text-slate-100 p-3 text-center font-extralight flex-1'>Qualité de l'air à <b className='font-extrabold'>Abidjan</b></p>
               {loading && <Loader variant='dots' />}
