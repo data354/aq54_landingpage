@@ -10,6 +10,7 @@ import Installations from '../components/Installations';
 import Partenaires from '../components/Partenaires';
 import Map from '../components/Map';
 import MapData from '../components/MapData'
+import Video from '../components/Video'
 
 export function SmoothScrolling(sectionId: string) {
   const section = document.getElementById(sectionId);
@@ -31,9 +32,10 @@ export default  function Home () {
       <PollutioDescription />
       <MapData />
       <Projects />
+      <Video />
       <Installations />
       <Partenaires />
-      {/* <Map /> */}
+      <Map />
     </>
   )
 }

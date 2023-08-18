@@ -24,6 +24,7 @@ export default function Header(){
           <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500 font-bold" : ""}`}>Accueil</a>
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500 font-bold" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500 font-bold" : ""}`}>Projet AQ54</a>
+          <a href='https://data354.com/' target='blank' className="hover:text-red-500 flex">Notre site web <IconExternalLink className='ml-2' /></a>
           <a href='https://viz.aq54.data354.com/' target='blank' className="hover:text-red-500 flex">Visualisation des données <IconExternalLink className='ml-2' /></a>
           <Button size='lg' onClick={() => SmoothScrolling('contacts')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
         </Flex>

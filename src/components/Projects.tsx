@@ -2,7 +2,7 @@ import { IconChartHistogram, IconCodeDots, IconTopologyStar3 } from "@tabler/ico
 import fondAq54 from "../assets/aq54Page.png"
 
 export default function Projects() {
-  return <div id="projects" className='bg-slate-950 bg-blend-multiply p-10 md:p-28 md:py-20'>
+  return <div id="projects" className='bg-slate-950 bg-blend-multiply p-10 md:p-28 '>
     <div className='max-w-7xl mx-auto'>
       <h2 className='text-red-500'>Le projet AQ54</h2>
       <p className='text-slate-400 lg:text-2xl sm:text-xl'>Une ambition globale</p>
