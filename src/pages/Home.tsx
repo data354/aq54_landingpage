@@ -35,7 +35,7 @@ export default  function Home () {
       <Video />
       <Installations />
       <Partenaires />
-      <Map />
+      {/* <Map /> */}
     </>
   )
 }

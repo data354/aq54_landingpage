@@ -10,6 +10,7 @@ export default function Contacts(){
         <h6><b>Telephone</b> : +225 07 1008 1410</h6>
         <h6><b>Mail</b> : aq54@data354.co</h6>
         <h6><b>Adresse</b> : Cocody, Riviera Boulevard Y4</h6>
+        <h6><b>Site web</b> : <a href="http://data354.com" target="_blank" rel="noopener noreferrer">Data354.com</a></h6>
         <a href="https://www.linkedin.com/company/data354/" className='inline-block' target="_blank" rel="noopener noreferrer">
           <Avatar alt="logo facebook" src={iconLinkedin} />
         </a>
