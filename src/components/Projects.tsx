@@ -10,13 +10,13 @@ export default function Projects() {
       <div className="grid grid-cols-1 md:grid-cols-3 mt-10 gap-7">
         <div className='bg-slate-900 p-8 flex flex-col items-center space-y-5 bg-opacity-60 backdrop-blur-3xl'>
           <IconTopologyStar3 size={80} className='text-zinc-400' />
-          <p className='text-center text-zinc-400'> Doter Abidjan d’un <b>réseau de capteurs</b> afin de <b>cartographier la qualité de l’air</b> en temps réel.</p></div>
+          <p className='text-center text-zinc-300'> Doter Abidjan d’un <b>réseau de capteurs</b> afin de <b>cartographier la qualité de l’air</b> en temps réel.</p></div>
         <div className='bg-slate-900 p-8  flex flex-col items-center space-y-5 bg-opacity-60 backdrop-blur-3xl'>
           <IconCodeDots size={80} className='text-red-500' />
-          <p className='text-center text-zinc-400'><b> Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne.</p></div>
+          <p className='text-center text-zinc-300'><b> Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne.</p></div>
         <div className='bg-slate-900 p-8  flex flex-col items-center space-y-5 bg-opacity-60 backdrop-blur-3xl'>
           <IconChartHistogram size={80} className='text-red-500' />
-          <p className='text-center text-zinc-400'> Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b>.</p></div>
+          <p className='text-center text-zinc-300'> Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b>.</p></div>
       </div>
       {/* <img className='mt-10 md:-mb-96 drop-shadow-lg' src={fondAq54} /> */}
     </div>

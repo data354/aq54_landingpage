@@ -5,6 +5,12 @@ export interface AQIINFO {
   Recommendation: string
 }
 
+export interface MapDataRes {
+  date: string 
+  location: string
+  pm2_5: number
+}
+
 const indicators = {
   "PM2.5": { unit: "µg/m³", label: 'PM2_5' },
   PM10: { unit: "µg/m³", label: 'PM10' },

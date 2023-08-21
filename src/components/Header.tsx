@@ -40,6 +40,7 @@ export default function Header(){
               <Menu.Item onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/article" ? "text-red-500" : "text-white"}`} component="a">Qualité de l'air</Menu.Item>
               <Menu.Item onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/project" ? "text-red-500" : "text-white"}`} component="a">Projet AQ54</Menu.Item>
               <Menu.Item className={`text-white hover:text-red-500 font-bold `} component="a" href="https://aq54.visualisation.data354.com/" target="_blank">Visualisation des données</Menu.Item>
+              <Menu.Item className={`text-white hover:text-red-500 font-bold `} component="a" href="https://data354.com/" target="_blank">Notre site web</Menu.Item>
               <Menu.Item onClick={() => SmoothScrolling('contact')} className={`text-white hover:text-red-500 font-bold`}>Nous contacter</Menu.Item>
             </Menu.Dropdown>
           </Menu>
