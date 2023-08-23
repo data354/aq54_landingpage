@@ -9,9 +9,9 @@ export default function Video() {
   }, [])
 
   return (
-    <div style={{zIndex: 10001}} className="bg-gradient-to-b from-slate-950 video-container" id="video">
+    <div style={{zIndex: 10001}} className="video-container" id="video">
       <video style={{zIndex: -1}} className="object-cover" loop muted ref={refVideo} >
-        <source src="/video.mp4" />
+        <source src="https://github.com/data354/aq54-lp/raw/main/public/video.mp4" />
       </video>
     </div>
   )

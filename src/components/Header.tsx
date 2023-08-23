@@ -1,10 +1,10 @@
 import { ActionIcon, Avatar, Button, Flex, Grid, Menu } from "@mantine/core"
-import { IconExternalLink, IconMenu, IconPhoneCall } from "@tabler/icons-react"
+import { IconExternalLink, IconMenu, IconPhoneCall, IconWorldWww } from "@tabler/icons-react"
 import { SmoothScrolling } from "../pages/Home"
 import { useLocation, useNavigate } from "react-router-dom"
 import logo from "../assets/logo.png"
 
-export default function Header(){
+export default function Header() {
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -24,9 +24,8 @@ export default function Header(){
           <a onClick={() => { navigate("/") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/" ? "text-red-500 font-bold" : ""}`}>Accueil</a>
           <a onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/article" ? "text-red-500 font-bold" : ""}`}>Qualité de l'air</a>
           <a onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 ${location.pathname === "/project" ? "text-red-500 font-bold" : ""}`}>Projet AQ54</a>
-          {/* <a href='https://data354.com/' target='blank' className="hover:text-red-500 flex">Notre site web <IconExternalLink className='ml-2' /></a> */}
           <a href='https://viz.aq54.data354.com/' target='blank' className="hover:text-red-500 flex">Visualisation des données <IconExternalLink className='ml-2' /></a>
-          <Button size='lg' onClick={() => SmoothScrolling('contacts')} leftIcon={<IconPhoneCall />} radius={0} className="btn-primary">Contactez-nous</Button>
+          <a href="https://data354.com" target="_blank" className="btn-primary p-3">Visitez data354.com </a>
         </Flex>
         <div className='flex justify-end lg:hidden'>
           <Menu shadow="md">
@@ -40,7 +39,6 @@ export default function Header(){
               <Menu.Item onClick={() => { navigate("/article") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/article" ? "text-red-500" : "text-white"}`} component="a">Qualité de l'air</Menu.Item>
               <Menu.Item onClick={() => { navigate("/project") }} className={`cursor-pointer hover:text-red-500 font-bold ${location.pathname === "/project" ? "text-red-500" : "text-white"}`} component="a">Projet AQ54</Menu.Item>
               <Menu.Item className={`text-white hover:text-red-500 font-bold `} component="a" href="https://aq54.visualisation.data354.com/" target="_blank">Visualisation des données</Menu.Item>
-              {/* <Menu.Item className={`text-white hover:text-red-500 font-bold `} component="a" href="https://data354.com/" target="_blank">Notre site web</Menu.Item> */}
               <Menu.Item onClick={() => SmoothScrolling('contact')} className={`text-white hover:text-red-500 font-bold`}>Nous contacter</Menu.Item>
             </Menu.Dropdown>
           </Menu>

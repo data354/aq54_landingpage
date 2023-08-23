@@ -6,7 +6,7 @@ import { SmoothScrolling } from "../pages/Home";
 import { IconArrowDown } from "@tabler/icons-react";
 import GaugeComponent from "react-gauge-component";
 
-export default function Banner(){
+export default function Banner() {
 
   const [aqiInfo, setAqiInfo] = useState<AQIINFO>()
   const [sensorsValues, setSensorsValues] = useState()
@@ -42,6 +42,9 @@ export default function Banner(){
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationData/byday/${moment().format("YYYY-MM-DD")}`)
       .then(async (response) => {
         let result = (await response.json())
+        console.log(result["SMART188"]["PM2_5"].data);
+        console.log(result["SMART189"]["PM2_5"].data);
+
         setSensorsValues(result)
         setSensorsValuesLength(result["SMART189"]["CO"]["data"].length)
       })
@@ -95,12 +98,12 @@ export default function Banner(){
                     arc={{
                       colorArray: ['green', 'yellow', 'orange', 'red', 'purple', 'maroon'],
                       subArcs: [
-                        { limit: 50, tooltip: { text: "Bon" } },
+                        { limit: 50, tooltip: { text: "Bonne" } },
                         { limit: 100, tooltip: { text: "Moderée" } },
-                        { limit: 150, tooltip: { text: "Mauvais pour la santé des groupes sensibles" } },
-                        { limit: 200, tooltip: { text: "Mauvais pour la santé" } },
-                        { limit: 300, tooltip: { text: "Très mauvais pour la santé" } },
-                        { limit: 500, tooltip: { text: "Dangereux" } }
+                        { limit: 150, tooltip: { text: "Mauvaise pour la santé des groupes sensibles" } },
+                        { limit: 200, tooltip: { text: "Mauvaise pour la santé" } },
+                        { limit: 300, tooltip: { text: "Très mauvaise pour la santé" } },
+                        { limit: 500, tooltip: { text: "Dangereuse" } }
                       ],
                       padding: 0.05,
                       width: 0.05,

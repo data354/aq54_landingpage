@@ -1,13 +1,14 @@
-import { MapContainer, Marker, Polygon, Polyline, TileLayer, Tooltip } from "react-leaflet"
+import { Circle, MapContainer, Marker, Polygon, Polyline, TileLayer, Tooltip } from "react-leaflet"
 import sensors from "../data/sensors"
 import { icon } from "leaflet"
 import { Text } from "@mantine/core"
 import prediction from "../data/predictions.json"
-
+import * as d3 from "d3"
 export default function Map() {
 
-  let mapZoom: number = 11
-  let mapCenter: [number, number] = [5.37, -4]
+  let mapZoom: number = 16
+  let mapCenter: [number, number] = [5.3679, -3.959]
+  let colorScale = d3.scaleLinear([12, 36, 56, 151, 251, 501], ['green', 'yellow', 'orange', 'red', 'purple', 'maroon']);
 
   function MapComponent() {
 
@@ -25,15 +26,15 @@ export default function Map() {
     return (
       <>
         <TileLayer url='https://tile.openstreetmap.org/{z}/{x}/{y}.png' />
-        {sensors.map((sensor, index: number) => <Marker key={index} position={{ lat: sensor.location.lat, lng: sensor.location.lng }} icon={iconDefault}>
+        {sensors.map((sensor, index: number) => <Circle key={index} radius={20} pathOptions={{interactive:true, color: colorScale(17), fillOpacity: 0.7, fillColor: colorScale(21)}} center={{ lat: sensor.location.lat, lng: sensor.location.lng }}>
           <Tooltip> <img src={sensor.picture} alt="" /> {sensor.name} <br /> {sensor.emplacement} <br /><Text size={"xs"} color='dimmed'>{sensor.description}</Text></Tooltip>
-        </Marker>)}
+        </Circle>)}
         {prediction.map((pred, index) => <Polygon pathOptions={{ color: "red" }} key={index} stroke color="red" positions={JSON.parse(pred.polygon)} />)}
       </>
     )
   }
 
-  return <MapContainer className='h-[55vh] p-0' zoom={mapZoom} center={mapCenter} scrollWheelZoom={false}>
+  return <MapContainer style={{ height: 600, width: 800, zIndex: 0 }} className='p-0' zoom={mapZoom} center={mapCenter} >
     <MapComponent />
   </MapContainer>
 }

@@ -1,8 +1,7 @@
 import { IconChartHistogram, IconCodeDots, IconTopologyStar3 } from "@tabler/icons-react";
-import fondAq54 from "../assets/aq54Page.png"
 
 export default function Projects() {
-  return <div id="projects" className='bg-slate-950 bg-blend-multiply p-10 md:p-28 '>
+  return <div id="projects" className='bg-slate-950 bg-blend-multiply bg-opacity-90 p-10 md:p-28 '>
     <div className='max-w-7xl mx-auto'>
       <h2 className='text-red-500'>Le projet AQ54</h2>
       <p className='text-slate-400 lg:text-2xl sm:text-xl'>Une ambition globale</p>
@@ -18,7 +17,6 @@ export default function Projects() {
           <IconChartHistogram size={80} className='text-red-500' />
           <p className='text-center text-zinc-300'> Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b>.</p></div>
       </div>
-      {/* <img className='mt-10 md:-mb-96 drop-shadow-lg' src={fondAq54} /> */}
     </div>
   </div>
 }

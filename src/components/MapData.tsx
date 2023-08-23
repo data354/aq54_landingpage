@@ -1,29 +1,33 @@
 import { useEffect, useState } from "react"
 import * as d3 from "d3"
 import prediction from "../data/predictions.json"
-import { Button, CheckIcon, Group, Loader, Modal, RangeSlider, Slider, TextInput, useMantineTheme } from "@mantine/core"
-import { IconCheck, IconChevronRight, IconClock, IconMail, IconPhone, IconUser, IconX } from "@tabler/icons-react"
+import { Button, CheckIcon, Group, Loader, Modal, MultiSelect, RangeSlider, SegmentedControl, Slider, TextInput, useMantineTheme } from "@mantine/core"
+import { IconCheck, IconChevronRight, IconClock, IconMail, IconMapPinCode, IconPhone, IconUser, IconX } from "@tabler/icons-react"
 import { MapDataRes } from "../data/aqi"
 import sensors from "../data/sensors"
 import { useForm } from "@mantine/form"
 import axios from "axios"
 import { notifications } from "@mantine/notifications"
+import Map from "./Map"
 
 export default function MapData() {
 
   const [data, setData] = useState<MapDataRes[]>()
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
+  const [mapType, setMapType] = useState<"sensor" | "city">("sensor")
 
-  let colors = d3.schemeAccent // ['green', 'yellow', 'orange', 'red', 'purple', 'maroon']
+  let colors = ['green', 'yellow', 'orange', 'red', 'purple', 'maroon']
   let PM25_breakpoints = [12, 36, 56, 151, 251, 501]
   let colorScale = d3.scaleLinear(PM25_breakpoints, colors)
 
   let pointsMap = prediction.map(pred => JSON.parse(pred.polygon))
 
-  const projectionPolygon = d3.geoMercator().fitSize([700, 700], { type: "MultiLineString", coordinates: pointsMap })
+  const projectionPolygon = d3.geoMercator().fitSize([800, 700], { type: "MultiLineString", coordinates: pointsMap })
   const projectionPoint = d3.geoMercator().fitSize([700, 700], { type: "MultiPoint", coordinates: sensors.map(sens => [sens.location.lng, sens.location.lat]) })
   const axisBottom = d3.axisBottom(d3.scaleLinear().domain([0, 500.5]).range([0, 600])).scale();
+  const villes = prediction.map(pre => pre.location)
+
 
   const polygonPath = d3.line()
     .x(d => {
@@ -89,7 +93,7 @@ export default function MapData() {
 
     }
 
-  }, [data])
+  }, [data, mapType])
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_HOST}/user/map`)
@@ -106,13 +110,16 @@ export default function MapData() {
       name: "",
       email: "",
       phone: "",
-      rangePm: [50, 500]
+      cities: []
     }
   })
 
   function alertRegister() {
     setOpenModal(false)
     setLoading(true)
+    form.validate()
+
+
     notifications.show({
       loading: loading,
       title: "Envoie des données en cours ...",
@@ -120,7 +127,7 @@ export default function MapData() {
       id: "showmessage",
       autoClose: false,
     })
-    axios.post(`${import.meta.env.VITE_API_HOST}/souscriptor`, { email: form.values.email, number: form.values.phone, name: form.values.name, minPm: form.values.rangePm[0], maxPm: form.values.rangePm[1] })
+    axios.post(`${import.meta.env.VITE_API_HOST}/souscriptor`, { email: form.values.email, number: form.values.phone, name: form.values.name, cities: form.values.cities })
       .then(async ({ data }) => {
         setLoading(false);
         notifications.update({
@@ -149,8 +156,10 @@ export default function MapData() {
       <Modal
         overlayProps={{ opacity: 0, blur: 10 }}
         centered opened={openModal} onClose={() => setOpenModal(false)}
-        title={<b>Confirmation</b>}>
-        <p className="leading-8">Veuillez confirmer votre inscription à la newletters pour recevoir les informations sur la qualité de l'air à Abidjan</p>
+        title={<b>Confirmation</b>}
+        style={{ zIndex: 10001 }}
+      >
+        <p className="leading-8">Veuillez confirmer votre inscription pour recevoir les informations sur la qualité de l'air à Abidjan</p>
         <Group position="right" mt={20}>
           <Button color="gray" variant="light" onClick={() => setOpenModal(false)}>Retour</Button>
           <Button loading={loading} loaderPosition="right" loaderProps={{ variant: "dots", color: "white", size: "sm" }} color="green" className="bg-green-600" onClick={() => alertRegister()}>Confirmer l'inscription</Button>
@@ -159,31 +168,32 @@ export default function MapData() {
       <div id="realTimeMap" className='p-10 md:p-28 bg-slate-200'>
         <div className='max-w-7xl mx-auto'>
           <h2 className='text-slate-700'>La qualité de l'air à Abidjan</h2>
-          <p className='text-slate-500 lg:text-2xl sm:text-xl'>Il y a six jours</p>
-          <div className="flex">
-            <svg className="mx-auto" id="mapData" width="800" height="700"></svg>
-            <div className="flex-1 md:p-20  flex flex-col">
-              <div className="space-y-5">
-                <p className="leading-8 text-left">Inscrivez-vous et recevez quotidiennement des alertes sur la qualité de l'air à Abidjan</p>
-                <TextInput {...form.getInputProps("name")} icon={<IconUser />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Nom et Prenoms" />
-                <TextInput {...form.getInputProps("email")} icon={<IconMail />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Email" />
-                <TextInput {...form.getInputProps("phone")} icon={<IconPhone />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Numero de telephone" />
-                <p className="leading-8">Veuillez selectionner l'intervalle à partir duquel vous souhaitez etre informé</p>
-                <RangeSlider
-                  color="gray"
-                  max={500}
-                  {...form.getInputProps("rangePm")}
-                  marks={[
-                    { value: 50, label: '50' },
-                    { value: 100, label: '100' },
-                    { value: 150, label: '150' },
-                    { value: 200, label: '200' },
-                    { value: 300, label: '300' },
-                    { value: 500, label: '500' },
-                  ]}
-                />
-              </div>
-              <Button onClick={() => setOpenModal(true)} rightIcon={<IconChevronRight />} className="bg-slate-600 hover:bg-slate-700 mt-16" size="lg">Envoyez vos données</Button>
+          <div className="mt-10">
+            <SegmentedControl
+              data={[
+                { label: 'Vue par capteur', value: 'sensor' },
+                { label: 'Vue par commune', value: 'city', disabled: true },
+              ]}
+              onChange={(value: "sensor" | "city") => setMapType(value)}
+            />
+          </div>
+          <div className="flex mt-5 space-x-20">
+            {
+              mapType === "sensor" ?
+                <Map />
+                :
+                <>
+                  <p className='text-slate-500 lg:text-2xl sm:text-xl'>Il y a six jours</p>
+                  <svg className="mx-auto" id="mapData" width="800" height="700"></svg>
+                </>
+            }
+            <div className="flex-1  flex flex-col justify-between">
+              <p className="leading-8 text-left text-xl">Inscrivez-vous pour être informé sur la qualité de l'air à Abidjan. Vous serez alerté lorsque le taux de PM2.5 dans l'air exedera 30 µg/m³.</p>
+              <TextInput required label="Nom et prenoms" {...form.getInputProps("name")} icon={<IconUser />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Nom et Prenoms" />
+              <TextInput required label="Email" {...form.getInputProps("email")} icon={<IconMail />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Email" />
+              <TextInput required label="Tel" {...form.getInputProps("phone")} icon={<IconPhone />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Numero de telephone" />
+              <MultiSelect required label="Selectionnez des communes" {...form.getInputProps("cities")} data={villes} icon={<IconMapPinCode />} style={{ zIndex: 0 }} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Selectionnez des communes" />
+              <Button type="submit" onClick={() => setOpenModal(true)} rightIcon={<IconChevronRight />} className="bg-slate-700 hover:bg-slate-900" size="lg">Inscrivez-vous</Button>
             </div>
           </div>
         </div>

@@ -62,8 +62,7 @@ body {
 
 #projects {
   background-size: cover;
-  color: rgb(255, 0, 0);
-  /* background-image: url("./assets/projet.jpg"); */
+  background-image: url("./assets/projet.jpg");
 }
 
 #headerIcon {
