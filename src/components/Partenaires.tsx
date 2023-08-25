@@ -4,7 +4,7 @@ import logoDiis from "../assets/diis.png"
 
 export default function Partenaires(){
   return (
-    <div id='partners' className='p-10 py-20'>
+    <div id='partners' className='p-10 py-10'>
       <div className="mx-auto max-w-7xl">
         <p className='text-lg text-zinc-500 font-bold sm:text-4xl text-center'>Nos partenaires</p>
         <div className='flex justify-center space-x-20 mt-20'>

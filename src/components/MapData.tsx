@@ -1,18 +1,26 @@
 import { useEffect, useState } from "react"
 import * as d3 from "d3"
 import prediction from "../data/predictions.json"
-import { Button, CheckIcon, Group, Loader, Modal, MultiSelect, RangeSlider, SegmentedControl, Slider, TextInput, useMantineTheme } from "@mantine/core"
-import { IconCheck, IconChevronRight, IconClock, IconMail, IconMapPinCode, IconPhone, IconUser, IconX } from "@tabler/icons-react"
+import { Button, CheckIcon, Group, Modal, MultiSelect, SegmentedControl, TextInput } from "@mantine/core"
+import { IconMail, IconMapPinCode, IconPhone, IconUser, IconX } from "@tabler/icons-react"
 import { MapDataRes } from "../data/aqi"
-import sensors from "../data/sensors"
 import { useForm } from "@mantine/form"
 import axios from "axios"
 import { notifications } from "@mantine/notifications"
 import Map from "./Map"
+import moment from "moment"
 
 export default function MapData() {
+  function getProjectionWidth(width: number): number {
+    if (width < 1024) return width
+    else if (width >= 1024 && width < 1280) return 500
+    else if (width >= 1280 && width < 1536) return 650
+    else if (width >= 1536) return 800
+    else return width
+  }
 
   const [data, setData] = useState<MapDataRes[]>()
+  const [date, setDate] = useState<string>("")
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [mapType, setMapType] = useState<"sensor" | "city">("sensor")
@@ -22,12 +30,11 @@ export default function MapData() {
   let colorScale = d3.scaleLinear(PM25_breakpoints, colors)
 
   let pointsMap = prediction.map(pred => JSON.parse(pred.polygon))
+  let projestWidth = getProjectionWidth(window.innerWidth)
 
-  const projectionPolygon = d3.geoMercator().fitSize([800, 700], { type: "MultiLineString", coordinates: pointsMap })
-  const projectionPoint = d3.geoMercator().fitSize([700, 700], { type: "MultiPoint", coordinates: sensors.map(sens => [sens.location.lng, sens.location.lat]) })
-  const axisBottom = d3.axisBottom(d3.scaleLinear().domain([0, 500.5]).range([0, 600])).scale();
+  const projectionPolygon = d3.geoMercator().fitSize([projestWidth, 700], { type: "MultiLineString", coordinates: pointsMap })
+  const axisBottom = d3.axisBottom(d3.scaleLinear().domain([0, 500.5]).range([0, projestWidth - 20])).scale();
   const villes = prediction.map(pre => pre.location)
-
 
   const polygonPath = d3.line()
     .x(d => {
@@ -40,12 +47,6 @@ export default function MapData() {
       if (!!coordinates) return coordinates[1]
       else return d[1]
     })
-
-  function PointPosition(d: [number, number]): [number, number] {
-    let projection = projectionPoint(d)
-    if (!!projection) return projection
-    else return [0, 0]
-  }
 
   useEffect(() => {
     if (data) {
@@ -62,19 +63,9 @@ export default function MapData() {
         .append("title")
         .text((_, index) => `${data[index].location}(${data[index].pm2_5})`);
 
-      svg.selectAll("circle")
-        .data(sensors)
-        .enter()
-        .append("circle")
-        .attr("cx", (d) => PointPosition([d.location.lng, d.location.lat])[0])
-        .attr("cy", (d) => PointPosition([d.location.lng, d.location.lat])[1])
-        .attr("fill", "black")
-        .attr("c", "50")
-        .attr("stroke", "white");
-
       svg
         .append("g")
-        .attr("transform", "translate(50, 630)")
+        .attr("transform", `translate(10, 630)`)
         .selectAll("rect")
         .data(PM25_breakpoints)
         .enter()
@@ -88,7 +79,7 @@ export default function MapData() {
 
       svg.append("g")
         .attr("class", "axis")
-        .attr("transform", "translate(50, 675)")
+        .attr("transform", "translate(10, 675)")
         .call(d3.axisBottom(axisBottom).tickValues(PM25_breakpoints));
 
     }
@@ -100,6 +91,7 @@ export default function MapData() {
       .then(async (response) => {
         let result = (await response.json())
         setData(result)
+        setDate(result[0].date)
       })
       .catch(async (response) => { })
 
@@ -117,8 +109,6 @@ export default function MapData() {
   function alertRegister() {
     setOpenModal(false)
     setLoading(true)
-    form.validate()
-
 
     notifications.show({
       loading: loading,
@@ -127,6 +117,7 @@ export default function MapData() {
       id: "showmessage",
       autoClose: false,
     })
+
     axios.post(`${import.meta.env.VITE_API_HOST}/souscriptor`, { email: form.values.email, number: form.values.phone, name: form.values.name, cities: form.values.cities })
       .then(async ({ data }) => {
         setLoading(false);
@@ -172,29 +163,34 @@ export default function MapData() {
             <SegmentedControl
               data={[
                 { label: 'Vue par capteur', value: 'sensor' },
-                { label: 'Vue par commune', value: 'city', disabled: true },
+                { label: 'Vue par commune', value: 'city' },
               ]}
               onChange={(value: "sensor" | "city") => setMapType(value)}
             />
           </div>
-          <div className="flex mt-5 space-x-20">
+          <div className="flex space-y-10 flex-col lg:flex-row lg:space-x-20 mt-5">
             {
               mapType === "sensor" ?
-                <Map />
+                <div className="space-y-5">
+                  <p>Date de mise à jour : {moment().subtract(1, "hours").format("YYYY-MM-DD HH:00")}</p>
+                  <Map />
+                </div>
                 :
-                <>
-                  <p className='text-slate-500 lg:text-2xl sm:text-xl'>Il y a six jours</p>
-                  <svg className="mx-auto" id="mapData" width="800" height="700"></svg>
-                </>
+                <div>
+                  <p>Date de mise à jour : {date}</p>
+                  <svg id="mapData" className="w-full lg:w-[500px] xl:w-[650px] 2xl:w-[800px]" height="700"></svg>
+                </div>
             }
-            <div className="flex-1  flex flex-col justify-between">
+            <form className="flex flex-col space-y-5"
+              onSubmit={form.onSubmit((values) => { setOpenModal(true) })}
+            >
               <p className="leading-8 text-left text-xl">Inscrivez-vous pour être informé sur la qualité de l'air à Abidjan. Vous serez alerté lorsque le taux de PM2.5 dans l'air exedera 30 µg/m³.</p>
               <TextInput required label="Nom et prenoms" {...form.getInputProps("name")} icon={<IconUser />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Nom et Prenoms" />
-              <TextInput required label="Email" {...form.getInputProps("email")} icon={<IconMail />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Email" />
+              <TextInput type="email" required label="Email" {...form.getInputProps("email")} icon={<IconMail />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Email" />
               <TextInput required label="Tel" {...form.getInputProps("phone")} icon={<IconPhone />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Numero de telephone" />
               <MultiSelect required label="Selectionnez des communes" {...form.getInputProps("cities")} data={villes} icon={<IconMapPinCode />} style={{ zIndex: 0 }} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Selectionnez des communes" />
-              <Button type="submit" onClick={() => setOpenModal(true)} rightIcon={<IconChevronRight />} className="bg-slate-700 hover:bg-slate-900" size="lg">Inscrivez-vous</Button>
-            </div>
+              <button type="submit" className="bg-slate-700 hover:bg-slate-900 text-white p-5">Inscrivez-vous </button>
+            </form>
           </div>
         </div>
       </div>

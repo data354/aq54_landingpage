@@ -30,9 +30,9 @@ export default  function Home () {
     <>
       <Banner />
       <PollutioDescription />
+      <Video />
       <MapData />
       <Projects />
-      <Video />
       <Installations />
       <Partenaires />
     </>

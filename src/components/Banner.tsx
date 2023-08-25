@@ -42,10 +42,9 @@ export default function Banner() {
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationData/byday/${moment().format("YYYY-MM-DD")}`)
       .then(async (response) => {
         let result = (await response.json())
-        console.log(result["SMART188"]["PM2_5"].data);
-        console.log(result["SMART189"]["PM2_5"].data);
-
         setSensorsValues(result)
+        console.log(result);
+
         setSensorsValuesLength(result["SMART189"]["CO"]["data"].length)
       })
       .catch(async (response) => { setLoading(false) })
@@ -59,7 +58,7 @@ export default function Banner() {
   return <div id="banner"
     className="bg-cover bg-slate-950 p-10 md:p-20 lg:p-36 lg:min-h-screen">
     <div className='text-white grid gap-5 grid-cols-2 lg:gap-20 xl:grid-cols-4'>
-      <div id='infoTitle' className='col-span-2 '>
+      <div id='infoTitle' className='col-span-2'>
         <h2 className='text-4xl font-bold md:text-6xl lg:text-7xl'>L'Open data contre la pollution de l'air</h2>
         <p className='text-xl text-white lg:text-3xl my-5 lg:my-20 text-justify md:mt-10 font-extralight'>
           La pollution de l’air est un enjeu de premier rang pour la santé publique,
@@ -118,7 +117,7 @@ export default function Banner() {
               }
             </div>
             {
-              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center text-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo.Most_Responsible_Pollutant}</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators[aqiInfo.Most_Responsible_Pollutant].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators[aqiInfo["Most_Responsible_Pollutant"]].unit} </small></div>
+              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center text-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo.Most_Responsible_Pollutant}</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators["PM2.5"].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators["PM2.5"].unit} </small></div>
             }
           </div>
           <div className="bg-slate-950 bg-opacity-80 text-md backdrop-blur-xl p-2">
