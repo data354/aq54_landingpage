@@ -5,8 +5,21 @@ export interface AQIINFO {
   Recommendation: string
 }
 
+export interface PM_NOWCAST {
+  Category: string
+  Color: string
+  Gravity: number
+  PM2_5: number
+  PM2_5_AQI_max: number
+  PM2_5_AQI_min: number
+  Recommendation: string
+  max: number
+  min: number
+  timestamp: string
+}
+
 export interface MapDataRes {
-  date: string 
+  date: string
   location: string
   pm2_5: number
 }

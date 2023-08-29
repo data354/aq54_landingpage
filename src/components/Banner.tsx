@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import aqi, { AQIINFO } from "../data/aqi";
+import aqi, { AQIINFO, PM_NOWCAST } from "../data/aqi";
 import moment from "moment";
 import { Button, HoverCard, Loader } from "@mantine/core";
 import { SmoothScrolling } from "../pages/Home";
@@ -8,7 +8,7 @@ import GaugeComponent from "react-gauge-component";
 
 export default function Banner() {
 
-  const [aqiInfo, setAqiInfo] = useState<AQIINFO>()
+  const [aqiInfo, setAqiInfo] = useState<PM_NOWCAST>()
   const [sensorsValues, setSensorsValues] = useState()
   const [sensorsValuesLength, setSensorsValuesLength] = useState<number>(1)
   const [loading, setLoading] = useState(false)
@@ -18,6 +18,8 @@ export default function Banner() {
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationAQI/byday/SMART189/${moment().format("YYYY-MM-DD")}`)
       .then(async (response) => {
         let result = (await response.json())[0]
+        console.log(result);
+
         setLoading(false);
         setAqiInfo(result)
       })
@@ -79,7 +81,7 @@ export default function Banner() {
                 !!aqiInfo &&
                 <>
                   <GaugeComponent
-                    value={aqiInfo.AQI} maxValue={500} minValue={0} id="gauge-component1"
+                    value={aqiInfo.PM2_5} maxValue={500} minValue={0} id="gauge-component1"
                     type="radial"
                     labels={{
                       markLabel: {
@@ -117,7 +119,7 @@ export default function Banner() {
               }
             </div>
             {
-              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center text-center'><small className='text-slate-100'>La concentration actuelle en <b>{aqiInfo.Most_Responsible_Pollutant}</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators["PM2.5"].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators["PM2.5"].unit} </small></div>
+              !!aqiInfo && !!sensorsValues && <div className='p-2 flex justify-center text-center'><small className='text-slate-100'>La concentration actuelle en <b>PM2.5</b> dans l'air est de <b>{Math.ceil(sensorsValues["SMART189"][aqi.indicators["PM2.5"].label]["data"][sensorsValuesLength - 1]["y"])}</b> {aqi.indicators["PM2.5"].unit} </small></div>
             }
           </div>
           <div className="bg-slate-950 bg-opacity-80 text-md backdrop-blur-xl p-2">
