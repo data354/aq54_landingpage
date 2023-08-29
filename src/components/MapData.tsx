@@ -9,6 +9,7 @@ import axios from "axios"
 import { notifications } from "@mantine/notifications"
 import Map from "./Map"
 import moment from "moment"
+import _ from "lodash"
 
 export default function MapData() {
   function getProjectionWidth(width: number): number {
@@ -71,17 +72,16 @@ export default function MapData() {
         .enter()
         .append("rect")
         .attr("fill", (d, i) => colorScale(d))
-        .attr("height", "30")
+        .attr("height", "10")
         .attr("width", (d, i) => Number(axisBottom(d)) - (i === 0 ? 0 : Number(axisBottom(PM25_breakpoints[i - 1]))))
         .attr("opacity", "0.7")
         .attr("x", (d, i) => (i === 0 ? 0 : Number(axisBottom(PM25_breakpoints[i - 1]))))
-        .attr("y", "15");
+        .attr("y", "35");
 
       svg.append("g")
         .attr("class", "axis")
         .attr("transform", "translate(10, 675)")
         .call(d3.axisBottom(axisBottom).tickValues(PM25_breakpoints));
-
     }
 
   }, [data, mapType])
@@ -89,7 +89,7 @@ export default function MapData() {
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_HOST}/user/map`)
       .then(async (response) => {
-        let result = (await response.json())
+        let result = _.sortBy((await response.json()), "location")
         setData(result)
         setDate(result[0].date)
       })
@@ -184,7 +184,7 @@ export default function MapData() {
             <form className="flex flex-col space-y-5"
               onSubmit={form.onSubmit((values) => { setOpenModal(true) })}
             >
-              <p className="leading-8 text-left text-xl">Inscrivez-vous pour être informé sur la qualité de l'air à Abidjan. Vous serez alerté lorsque le taux de PM2.5 dans l'air exedera 30 µg/m³.</p>
+              <p className="leading-8 text-left text-xl">Inscrivez-vous pour être informé sur la qualité de l'air à Abidjan. Vous serez alerté lorsque le taux de PM2.5 dans l'air excédera 30 µg/m³.</p>
               <TextInput required label="Nom et prenoms" {...form.getInputProps("name")} icon={<IconUser />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Nom et Prenoms" />
               <TextInput type="email" required label="Email" {...form.getInputProps("email")} icon={<IconMail />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Email" />
               <TextInput required label="Tel" {...form.getInputProps("phone")} icon={<IconPhone />} variant="filled" className="drop-shadow-sm" size="lg" placeholder="Numero de telephone" />
