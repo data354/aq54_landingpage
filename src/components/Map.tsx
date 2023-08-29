@@ -19,6 +19,8 @@ export default function Map() {
         let length = new Date().getHours() - 1
         let data: [number, number] = [result["SMART188"]["PM2_5"].data[length].y, result["SMART189"]["PM2_5"].data[length].y]
         set_sensors_values(data)
+        console.log(data);
+        
         set_sensors_date(result["SMART188"]["PM2_5"].data[length].x)
       })
       .catch(async (response) => { })
