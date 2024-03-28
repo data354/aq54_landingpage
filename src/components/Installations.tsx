@@ -13,13 +13,13 @@ export default function Installations() {
         <p className='text-lg text-zinc-500 font-bold sm:text-4xl my-10 text-center '>Nos installations</p>
         <div className='mt-14 grid grid-cols-1 md:grid-cols-2 gap-20'>
           <div className='space-y-6'>
-            <p className=''>Le capteur <b className='text-red-500'>SMART188</b> installé à la pharmacie du bonheur près d'une rue bituméé.</p>
+            <p className=''>Le capteur <b className='text-red-500'>SMART188</b> installé à la pharmacie du bonheur près d'une rue bitumée.</p>
             <div style={{ backgroundImage: `url("${fondSensor188_3}")` }}
               className='h-80 lg:h-96 bg-center bg-cover'>
             </div>
           </div>
           <div className="space-y-6">
-            <p className=''>Le capteur <b className='text-red-500'>SMART189</b> installé à la pharmacie Ministre près d'une rue non bituméé.</p>
+            <p className=''>Le capteur <b className='text-red-500'>SMART189</b> installé à la pharmacie Ministre près d'une rue non bitumée.</p>
             <div style={{ backgroundImage: `url("${fondSensor189_1}")` }}
               className='h-80 lg:h-96 bg-cover bg-center'>
             </div>

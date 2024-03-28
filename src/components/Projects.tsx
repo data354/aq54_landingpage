@@ -12,7 +12,7 @@ export default function Projects() {
           <p className='text-center text-zinc-300'> Doter Abidjan d’un <b>réseau de capteurs</b> afin de <b>cartographier la qualité de l’air</b> en temps réel.</p></div>
         <div className='bg-slate-900 p-8  flex flex-col items-center space-y-5 bg-opacity-60 backdrop-blur-3xl'>
           <IconCodeDots size={80} className='text-red-500' />
-          <p className='text-center text-zinc-300'><b> Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution aérienne.</p></div>
+          <p className='text-center text-zinc-300'><b> Collecter, traiter, analyser</b> les données pour comprendre et agir contre la pollution atmosphérique.</p></div>
         <div className='bg-slate-900 p-8  flex flex-col items-center space-y-5 bg-opacity-60 backdrop-blur-3xl'>
           <IconChartHistogram size={80} className='text-red-500' />
           <p className='text-center text-zinc-300'> Développer une <b>plateforme de visualisation</b> des données et les <b>diffuser ouvertement</b>.</p></div>
