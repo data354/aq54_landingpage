@@ -11,6 +11,7 @@ import Partenaires from '../components/Partenaires';
 import Map from '../components/Map';
 import MapData from '../components/MapData'
 import Video from '../components/Video'
+import locations from '../assets/locations.json';
 
 export function SmoothScrolling(sectionId: string) {
   const section = document.getElementById(sectionId);
@@ -31,7 +32,7 @@ export default  function Home () {
       <Banner />
       <PollutioDescription />
       <Video />
-      <MapData />
+      <MapData locations={locations}/>
       <Projects />
       <Installations />
       <Partenaires />

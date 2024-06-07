@@ -23,6 +23,10 @@ export interface MapDataRes {
   location: string
   pm2_5: number
 }
+export type LocationType = {
+  name: string,
+  measure: number,
+};
 
 const indicators = {
   "PM2.5": { unit: "µg/m³", label: 'PM2_5' },

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import * as d3 from "d3"
 import prediction from "../data/predictions.json"
 import { Button, CheckIcon, Group, Modal, MultiSelect, SegmentedControl, TextInput } from "@mantine/core"
 import { IconMail, IconMapPinCode, IconPhone, IconUser, IconX } from "@tabler/icons-react"
@@ -10,81 +9,15 @@ import { notifications } from "@mantine/notifications"
 import Map from "./Map"
 import moment from "moment"
 import _ from "lodash"
+import Heatmap from "./Heatmap"
 
-export default function MapData() {
-  function getProjectionWidth(width: number): number {
-    if (width < 1024) return width
-    else if (width >= 1024 && width < 1280) return 500
-    else if (width >= 1280 && width < 1536) return 650
-    else if (width >= 1536) return 800
-    else return width
-  }
-
+export default function MapData(props: Readonly<{ locations: any }>) {
   const [data, setData] = useState<MapDataRes[]>()
   const [date, setDate] = useState<string>("")
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [loading, setLoading] = useState<boolean>(false)
   const [mapType, setMapType] = useState<"sensor" | "city">("sensor")
-
-  let colors = ['green', 'yellow', 'orange', 'red', 'purple', 'maroon']
-  let PM25_breakpoints = [12, 36, 56, 151, 251, 501]
-  let colorScale = d3.scaleLinear(PM25_breakpoints, colors)
-
-  let pointsMap = prediction.map(pred => JSON.parse(pred.polygon))
-  let projestWidth = getProjectionWidth(window.innerWidth)
-
-  const projectionPolygon = d3.geoMercator().fitSize([projestWidth, 700], { type: "MultiLineString", coordinates: pointsMap })
-  const axisBottom = d3.axisBottom(d3.scaleLinear().domain([0, 500.5]).range([0, projestWidth - 20])).scale();
   const villes = prediction.map(pre => pre.location)
-
-  const polygonPath = d3.line()
-    .x(d => {
-      let coordinates = projectionPolygon(d)
-      if (!!coordinates) return coordinates[0]
-      else return d[0]
-    })
-    .y(d => {
-      let coordinates = projectionPolygon(d)
-      if (!!coordinates) return coordinates[1]
-      else return d[1]
-    })
-
-  useEffect(() => {
-    if (data) {
-      let svg = d3.select("#mapData")
-      svg.selectAll("path")
-        .data(pointsMap)
-        .enter()
-        .append("g")
-        .append("path")
-        .attr("d", (d) => polygonPath(d) + "Z")
-        .attr("fill", (_, index) => colorScale(data[index].pm2_5))
-        .attr("fill-opacity", "0.5")
-        .attr("stroke", "white")
-        .append("title")
-        .text((_, index) => `${data[index].location}(${data[index].pm2_5})`);
-
-      svg
-        .append("g")
-        .attr("transform", `translate(10, 630)`)
-        .selectAll("rect")
-        .data(PM25_breakpoints)
-        .enter()
-        .append("rect")
-        .attr("fill", (d, i) => colorScale(d))
-        .attr("height", "10")
-        .attr("width", (d, i) => Number(axisBottom(d)) - (i === 0 ? 0 : Number(axisBottom(PM25_breakpoints[i - 1]))))
-        .attr("opacity", "0.7")
-        .attr("x", (d, i) => (i === 0 ? 0 : Number(axisBottom(PM25_breakpoints[i - 1]))))
-        .attr("y", "35");
-
-      svg.append("g")
-        .attr("class", "axis")
-        .attr("transform", "translate(10, 675)")
-        .call(d3.axisBottom(axisBottom).tickValues(PM25_breakpoints));
-    }
-
-  }, [data, mapType])
 
   useEffect(() => {
     fetch(`${import.meta.env.VITE_API_HOST}/user/map`)
@@ -178,7 +111,23 @@ export default function MapData() {
                 :
                 <div>
                   <p>Date de mise à jour : {date}</p>
-                  <svg id="mapData" className="w-full lg:w-[500px] xl:w-[650px] 2xl:w-[800px]" height="700"></svg>
+                  <Heatmap
+                    className="w-full h-[700px] lg:w-[500px] xl:w-[650px] 2xl:w-[800px]"
+                    //@ts-ignore
+                    locations={props.locations}
+                    tileUrl={import.meta.env.VITE_OPEN_STREET_TILE_URL}
+                    data={data ?? []}
+                    mapOptions={{
+                      center: [5.3484501, -3.979665],
+                      zoom: 10.5
+                    }}
+                    scaleOptions={{
+                      grades: [0, 50, 100, 150, 200, 300],
+                      labels: [],
+                      colors: ['green', 'yellow', 'orange', 'red', 'purple', 'maroon'],
+                    }}
+                    cacheStorageKey={import.meta.env.VITE_AQ_MAP_CACHE_STORAGE_KEY}
+                  />
                 </div>
             }
             <form className="flex flex-col space-y-5"
