@@ -15,6 +15,7 @@ type ComponentStateType = {
   info: L.Control,
   legend: L.Control,
   layer1Timeout: number,
+  prevPropagatedFromLayer: L.LeafletMouseEvent['propagatedFrom'],
 };
 type ComponentPropsType = {
   className: string,
@@ -147,11 +148,14 @@ export default class Component extends React.Component<ComponentPropsType> {
       opacity: 1,
       color: 'white',
       dashArray: '3',
-      fillOpacity: (this.state.layer1) ? 0 : 0.7
+      fillOpacity: (this.state.layer1 && !this.state.prevPropagatedFromLayer) ? 0 : 0.7
     };
   }
   highlightFeature(e: L.LeafletMouseEvent) {
-    if (this.state.layer1) clearTimeout(this.state.layer1Timeout);
+    if (this.state.layer1) {
+      clearTimeout(this.state.layer1Timeout);
+      this.state.prevPropagatedFromLayer?.setStyle({ fillOpacity: 0.7 });
+    };
     const layer = e.target;
     layer.setStyle({
       weight: 5,
@@ -176,7 +180,7 @@ export default class Component extends React.Component<ComponentPropsType> {
       features: subFeatures
     };
   }
-  cleanUpLayer1(propagatedFrom?: L.LeafletMouseEvent['propagatedFrom']) {
+  cleanUpLayer1() {
     if (!this.state.layer1) return;
 
     clearTimeout(this.state.layer1Timeout);
@@ -185,12 +189,12 @@ export default class Component extends React.Component<ComponentPropsType> {
       layer1: null,
       layer1Timeout: null,
     });
-    propagatedFrom?.setStyle({
+    this.state.prevPropagatedFromLayer?.setStyle({
       fillOpacity: 0.7
     });
   }
   async addLayer1(propagatedFrom: L.LeafletMouseEvent['propagatedFrom']) {
-    this.cleanUpLayer1(propagatedFrom);
+    this.cleanUpLayer1();
     const layer1 = L.geoJson(await this.loadSubFeatures(propagatedFrom.feature.properties), {
       //@ts-ignore
       style: this.style1,
@@ -200,11 +204,12 @@ export default class Component extends React.Component<ComponentPropsType> {
     layer1.on({
       mouseout: (e: L.LeafletMouseEvent) => {
         this.setState({
-          layer1Timeout: setTimeout(() => this.cleanUpLayer1(propagatedFrom), 1000)
+          layer1Timeout: setTimeout(() => this.cleanUpLayer1(), 1000)
         });
       },
     });
     this.setState({
+      prevPropagatedFromLayer: propagatedFrom,
       layer1: layer1.addTo(this.map),
     });
   }
