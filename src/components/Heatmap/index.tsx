@@ -1,15 +1,24 @@
 'use client';
 
 import React from 'react';
-import type { Feature, FeatureCollection, Geometry } from 'geojson';
+import type { BBox, Feature, FeatureCollection, Geometry } from 'geojson';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './index.css';
 import { LocationType, MapDataRes } from '../../data/aqi';
 
+type ComponentGeoJsonType = { features: Feature<Geometry, LocationType>[]; type: "FeatureCollection"; bbox?: BBox | undefined; };
+type ComponentStateType = {
+  tiles: L.TileLayer,
+  layer0: L.GeoJSON<LocationType>,
+  layer1: L.GeoJSON<LocationType>,
+  info: L.Control,
+  legend: L.Control,
+  layer1Timeout: number,
+};
 type ComponentPropsType = {
   className: string,
-  locations: FeatureCollection<Geometry, LocationType>,
+  locations: [FeatureCollection<Geometry, LocationType>, FeatureCollection<Geometry, LocationType>],
   tileUrl: string,
   data: MapDataRes[],
   mapOptions: {
@@ -28,12 +37,7 @@ export default class Component extends React.Component<ComponentPropsType> {
   //@ts-ignore
   map: L.Map;
   //@ts-ignore
-  state: {
-    tiles: L.TileLayer,
-    geojson: L.GeoJSON<LocationType>,
-    info: L.Control,
-    legend: L.Control,
-  } = {};
+  state: ComponentStateType = {};
 
   constructor(props: ComponentPropsType) {
     super(props);
@@ -44,6 +48,12 @@ export default class Component extends React.Component<ComponentPropsType> {
     this.resetHighlight = this.resetHighlight.bind(this);
     this.zoomToFeature = this.zoomToFeature.bind(this);
     this.onEachFeature = this.onEachFeature.bind(this);
+    this.loadSubFeatures = this.loadSubFeatures.bind(this);
+    this.style1 = this.style1.bind(this);
+    this.resetHighlight1 = this.resetHighlight1.bind(this);
+    this.onEachFeature1 = this.onEachFeature1.bind(this);
+    this.cleanUpLayer1 = this.cleanUpLayer1.bind(this);
+    this.addLayer1 = this.addLayer1.bind(this);
   }
 
   async componentDidMount() {
@@ -59,7 +69,7 @@ export default class Component extends React.Component<ComponentPropsType> {
     };
     info.update = function (props: LocationType) {
       this._div.innerHTML = `<h4>Air Quality</h4>${props
-        ? `<b>${props.name}</b><br />${props.measure} PM2.5`
+        ? `<b>${props.village ?? props.s_town ?? props.town}</b><br />${props.measure} PM2.5`
         : 'Hover over a place'
         }`;
     };
@@ -71,7 +81,9 @@ export default class Component extends React.Component<ComponentPropsType> {
       for (let i = 0; i < _.props.scaleOptions.grades.length; i++) {
         div.innerHTML +=
           '<i style="background:' + _.getColor(_.props.scaleOptions.grades[i] + 1) + '"></i> ' +
-          _.props.scaleOptions.grades[i] + (_.props.scaleOptions.grades[i + 1] ? '&ndash;' + _.props.scaleOptions.grades[i + 1] + '<br>' : '+');
+          _.props.scaleOptions.grades[i] + (_.props.scaleOptions.grades[i + 1]
+            ? '&ndash;' + _.props.scaleOptions.grades[i + 1] + '<br>'
+            : '+');
       }
       return div;
     };
@@ -80,7 +92,7 @@ export default class Component extends React.Component<ComponentPropsType> {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(this.map),
-      geojson: L.geoJson(await this.syncData(), {
+      layer0: L.geoJson((await this.syncData())[0], {
         //@ts-ignore
         style: this.style,
         //@ts-ignore
@@ -90,21 +102,34 @@ export default class Component extends React.Component<ComponentPropsType> {
       legend: legend.addTo(this.map),
     });
   }
-  async syncData() {
+  async syncData(): Promise<ComponentGeoJsonType[]> {
     const cachedData = localStorage.getItem(this.props.cacheStorageKey);
-    if (cachedData) return JSON.parse(cachedData);
-    const result = {
-      ...this.props.locations,
-      features: this.props.locations.features.map(f => {
+    let result: ComponentGeoJsonType[];
+    if (cachedData) {
+      let { updatedAt, result } = JSON.parse(cachedData),
+        now = new Date();
+      if (
+        updatedAt instanceof Date
+        && updatedAt.getFullYear() === now.getFullYear()
+        && updatedAt.getMonth() === now.getMonth()
+        && updatedAt.getDate() === now.getDate()
+        && updatedAt.getHours() >= now.getHours()
+      ) {
+        return result;
+      }
+    }
+    result = this.props.locations.map(locations => ({
+      ...locations,
+      features: locations.features.map(f => {
         const d = this.props.data.find((m: MapDataRes) =>
-          m.location.toLowerCase().includes(f.properties.name.toLowerCase())
-          || f.properties.name.toLowerCase().includes(m.location.toLowerCase())
+          m.location.toLowerCase().includes((f.properties.village ?? f.properties.s_town ?? f.properties.town).toLowerCase())
+          || (f.properties.village ?? f.properties.s_town ?? f.properties.town).toLowerCase().includes(m.location.toLowerCase())
         )
         if (d) f.properties.measure = d.pm2_5;
         return f;
       })
-    };
-    localStorage.setItem(this.props.cacheStorageKey, JSON.stringify(result));
+    }));
+    localStorage.setItem(this.props.cacheStorageKey, JSON.stringify({ updatedAt: new Date(), result }));
     return result;
   }
   getColor(d: number) {
@@ -122,46 +147,104 @@ export default class Component extends React.Component<ComponentPropsType> {
       opacity: 1,
       color: 'white',
       dashArray: '3',
-      fillOpacity: 0.7
+      fillOpacity: (this.state.layer1) ? 0 : 0.7
     };
   }
-  highlightFeature(e: Event) {
+  highlightFeature(e: L.LeafletMouseEvent) {
+    if (this.state.layer1) clearTimeout(this.state.layer1Timeout);
     const layer = e.target;
-    //@ts-ignore
-    layer?.setStyle({
+    layer.setStyle({
       weight: 5,
       color: '#666',
       dashArray: '',
       fillOpacity: 0.7
     });
+    layer.bringToFront();
     //@ts-ignore
-    layer?.bringToFront();
-    //@ts-ignore
-    this.state.info.update(layer?.feature?.properties);
+    this.state.info.update(layer.feature.properties);
   }
-  resetHighlight(e: Event) {
-    //@ts-ignore
-    this.state.geojson.resetStyle(e.target);
+  resetHighlight(e: L.LeafletMouseEvent) {
+    this.state.layer0.resetStyle(e.target);
     //@ts-ignore
     this.state.info.update();
   }
-  zoomToFeature(e: Event) {
-    //@ts-ignore
-    this.map.fitBounds(e.target?.getBounds());
+  async loadSubFeatures({ town }: LocationType) {
+    const data = (await this.syncData())[1];
+    const subFeatures = data.features.filter(f => f.properties.town === town);
+    return {
+      ...this.props.locations[1],
+      features: subFeatures
+    };
+  }
+  cleanUpLayer1(propagatedFrom?: L.LeafletMouseEvent['propagatedFrom']) {
+    if (!this.state.layer1) return;
+
+    clearTimeout(this.state.layer1Timeout);
+    this.state.layer1.removeFrom(this.map);
+    this.setState({
+      layer1: null,
+      layer1Timeout: null,
+    });
+    propagatedFrom?.setStyle({
+      fillOpacity: 0.7
+    });
+  }
+  async addLayer1(propagatedFrom: L.LeafletMouseEvent['propagatedFrom']) {
+    this.cleanUpLayer1(propagatedFrom);
+    const layer1 = L.geoJson(await this.loadSubFeatures(propagatedFrom.feature.properties), {
+      //@ts-ignore
+      style: this.style1,
+      //@ts-ignore
+      onEachFeature: this.onEachFeature1,
+    });
+    layer1.on({
+      mouseout: (e: L.LeafletMouseEvent) => {
+        this.setState({
+          layer1Timeout: setTimeout(() => this.cleanUpLayer1(propagatedFrom), 1000)
+        });
+      },
+    });
+    this.setState({
+      layer1: layer1.addTo(this.map),
+    });
+  }
+  async zoomToFeature(e: L.LeafletMouseEvent) {
+    const layer = e.target;
+    this.map.fitBounds(layer.getBounds());
+
+    this.addLayer1(layer);
   }
   onEachFeature(feature: Feature<null, LocationType>, layer: L.Layer) {
     layer.on({
-      //@ts-ignore
       mouseover: this.highlightFeature,
-      //@ts-ignore
       mouseout: this.resetHighlight,
-      //@ts-ignore
       click: this.zoomToFeature,
+    });
+  }
+  style1(feature: Feature<null, LocationType>) {
+    return {
+      fillColor: this.getColor(feature.properties.measure),
+      weight: 2,
+      opacity: 1,
+      color: 'white',
+      dashArray: '3',
+      fillOpacity: 0.7
+    };
+  }
+  resetHighlight1(e: L.LeafletMouseEvent) {
+    this.state.layer1.resetStyle(e.target);
+    //@ts-ignore
+    this.state.info.update();
+  }
+  onEachFeature1(feature: Feature<null, LocationType>, layer: L.Layer) {
+    layer.on({
+      mouseover: this.highlightFeature,
+      mouseout: this.resetHighlight1,
     });
   }
 
   render() {
-    return <div className={this.props.className}>
+    return <div className={this.props.className} onMouseLeave={this.cleanUpLayer1}>
       <div ref={this.containerRef} />
     </div>;
   }
