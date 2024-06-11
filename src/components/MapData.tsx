@@ -11,7 +11,7 @@ import moment from "moment"
 import _ from "lodash"
 import Heatmap from "./Heatmap"
 
-export default function MapData(props: Readonly<{ locations: any }>) {
+export default function MapData(props: Readonly<{ locations: [any, any] }>) {
   const [data, setData] = useState<MapDataRes[]>()
   const [date, setDate] = useState<string>("")
   const [openModal, setOpenModal] = useState<boolean>(false)

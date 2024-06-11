@@ -24,7 +24,9 @@ export interface MapDataRes {
   pm2_5: number
 }
 export type LocationType = {
-  name: string,
+  town: string,
+  s_town: string,
+  village: string,
   measure: number,
 };
 
