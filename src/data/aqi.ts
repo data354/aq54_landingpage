@@ -1,27 +1,27 @@
 export interface AQIINFO {
-  Most_Responsible_Pollutant: "PM2.5" | "PM10" | "NO2" | "CO" | "O3"
-  Gravity: number
-  AQI: number
-  Recommendation: string
+  Most_Responsible_Pollutant: "PM2.5" | "PM10" | "NO2" | "CO" | "O3";
+  Gravity: number;
+  AQI: number;
+  Recommendation: string;
 }
 
 export interface PM_NOWCAST {
-  Category: string
-  Color: string
-  Gravity: number
-  PM2_5: number
-  PM2_5_AQI_max: number
-  PM2_5_AQI_min: number
-  Recommendation: string
-  max: number
-  min: number
-  timestamp: string
+  Category: string;
+  Color: string;
+  Gravity: number;
+  PM2_5: number;
+  PM2_5_AQI_max: number;
+  PM2_5_AQI_min: number;
+  Recommendation: string;
+  max: number;
+  min: number;
+  timestamp: string;
 }
 
 export interface MapDataRes {
-  date: string
-  location: string
-  pm2_5: number
+  date: string;
+  location: string;
+  pm2_5: number;
 }
 export type LocationType = {
   name: string,
@@ -29,12 +29,12 @@ export type LocationType = {
 };
 
 const indicators = {
-  "PM2.5": { unit: "µg/m³", label: 'PM2_5' },
-  PM10: { unit: "µg/m³", label: 'PM10' },
-  NO2: { unit: "ppb", label: 'NO2' },
-  CO: { unit: "ppm", label: 'CO' },
-  O3: { unit: "ppm", label: 'O3' }
-}
+  "PM2.5": { unit: "µg/m³", label: "PM2_5" },
+  PM10: { unit: "µg/m³", label: "PM10" },
+  NO2: { unit: "ppb", label: "NO2" },
+  CO: { unit: "ppm", label: "CO" },
+  O3: { unit: "ppm", label: "O3" },
+};
 
 const aqiRanges = {
   NO2: [
@@ -76,7 +76,7 @@ const aqiRanges = {
     "151 < AQI < 200 Unhealthy",
     "201 < AQI < 300 Very Unhealthy",
     "301 < AQI < 500 Hazardous",
-  ]
-}
+  ],
+};
 
-export default { aqiRanges, indicators }
+export default { aqiRanges, indicators };

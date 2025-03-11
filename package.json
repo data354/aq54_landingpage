@@ -7,8 +7,8 @@
     "dev": "vite ",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "docker:build": "DOCKER_BUILDKIT=1 docker build -t europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp .",
-    "docker:push": "docker push europe-west3-docker.pkg.dev/dev-clients-307710/aq54/lp",
+    "docker:build": "DOCKER_BUILDKIT=1 docker build --platform linux/amd64 -t europe-west1-docker.pkg.dev/aq54-project/aq54/landing-page .",
+    "docker:push": "docker push europe-west1-docker.pkg.dev/aq54-project/aq54/landing-page",
     "publish:cloud": "yarn build && yarn docker:build && yarn docker:push"
   },
   "dependencies": {
