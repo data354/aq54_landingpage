@@ -21,5 +21,3 @@ export function getIcon(pm2_5: number) {
     iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${getRightIconColor(pm2_5)}.png`
   })
 }
-
-console.log(getRightIconColor(5));

@@ -18,7 +18,6 @@ export default function Banner() {
     fetch(`${import.meta.env.VITE_API_HOST}/user/stationAQI/byday/SMART189/${moment().format("YYYY-MM-DD")}`)
       .then(async (response) => {
         let result = (await response.json())[0]
-        console.log(result);
 
         setLoading(false);
         setAqiInfo(result)
@@ -45,7 +44,6 @@ export default function Banner() {
       .then(async (response) => {
         let result = (await response.json())
         setSensorsValues(result)
-        console.log(result);
 
         setSensorsValuesLength(result["SMART189"]["CO"]["data"].length)
       })

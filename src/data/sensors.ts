@@ -1,25 +1,58 @@
-import fondSmart188 from "../assets/sensor188_3.jpeg"
-import fondSmart189 from "../assets/sensor189_2.jpeg"
+import fondSmart188 from "../assets/sensor188_3.jpeg";
+import fondSmart189 from "../assets/sensor189_2.jpeg";
+import defaultSensor from "../assets/sensor.jpg";
+import { api } from "../lib/api-client";
 
-export default [
+export type Sensor = {
+  name: string;
+  emplacement: string;
+  description: string;
+  picture: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+};
+
+const defaultSensors = [
   {
     name: "SMART188",
     emplacement: "Pharmarcie du Bonheur",
     description: "Pres d'une rue bitumée",
     picture: fondSmart188,
-    location: {
-      lat: 5.369297504425049,
-      lng: -3.958930253982544
-    }
   },
   {
     name: "SMART189",
     emplacement: "Pharmarcie Ministre",
     description: "Près d'une rue non bitumée",
     picture: fondSmart189,
+  },
+];
+
+export const getSensors = async (): Promise<{
+  data: Sensor[];
+  count: number;
+}> => {
+  const sensors = await api.get<Record<string, string>[]>(`/getStations`);
+  const data = sensors.map((sensor) => ({
+    name: sensor.station_name,
+    emplacement:
+      defaultSensors.find((s) => s.name === sensor.station_name)?.emplacement ||
+      "Université de Cocody",
+    description:
+      defaultSensors.find((s) => s.name === sensor.station_name)?.description ||
+      "Près d'une rue bitumée",
+    picture:
+      defaultSensors.find((s) => s.name === sensor.station_name)?.picture ||
+      defaultSensor,
     location: {
-      lat: 5.365315914154053,
-      lng: -3.9578371047973633
-    }
-  }
-]
+      lat: parseFloat(sensor.latitude),
+      lng: parseFloat(sensor.longitude),
+    },
+  }));
+
+  return {
+    data,
+    count: data.length,
+  };
+};
